@@ -1,0 +1,49 @@
+name: Deploy to Coolify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run ESLint
+      run: npm run lint
+      
+    - name: Build application
+      run: npm run build
+      
+    - name: Test Docker build
+      run: |
+        docker build -t cryptodesk-test .
+        docker run --rm -d -p 3001:80 --name cryptodesk-test cryptodesk-test
+        sleep 5
+        curl -f http://localhost:3001/health || exit 1
+        docker stop cryptodesk-test
+        
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Deploy to Coolify
+      run: |
+        echo "✅ Build successful - Coolify will auto-deploy via webhook"
+        echo "🚀 Application will be available at: https://cryptodesk.perigrine.cloud"
