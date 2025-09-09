@@ -24,7 +24,7 @@ RUN echo "Files after build:" && ls -la && echo "Contents of out directory:" && 
 RUN apk add --no-cache nginx
 
 # Clear default nginx html and copy our files
-RUN rm -rf /usr/share/nginx/html/*
+RUN rm -rf /usr/share/nginx/html/* && mkdir -p /usr/share/nginx/html
 
 # Copy built files or fallback to a simple test page
 RUN if [ -d "out" ]; then \
