@@ -1,0 +1,145 @@
+{
+  "header": {
+    "logo": "swiftnbuy",
+    "buyCrypto": "Buy Crypto",
+    "sellCrypto": "Sell Crypto",
+    "wallet": "Wallet",
+    "aboutUs": "About Us",
+    "careers": "Careers",
+    "buyNow": "Buy Now",
+    "language": "English",
+    "languages": {
+      "english": "English",
+      "spanish": "Español",
+      "french": "Français",
+      "german": "Deutsch"
+    }
+  },
+  "hero": {
+    "title": "Buy & Sell Crypto",
+    "titleHighlight": "Instantly",
+    "description": "With a few clicks - buy, sell and manage your crypto assets.",
+    "features": {
+      "fastEasy": "Fast & Easy",
+      "secure": "Secure & Transparent",
+      "support": "24/7 Support"
+    }
+  },
+  "features": {
+    "title": "Why Choose swiftnbuy?",
+    "subtitle": "Experience the difference with our user-focused platform and comprehensive features.",
+    "fast": {
+      "title": "Lightning-Fast Transactions",
+      "description": "Buy and sell cryptocurrencies in minutes with our optimized processes."
+    },
+    "security": {
+      "title": "Top-Tier Security",
+      "description": "Your assets are protected with advanced security measures and protocols."
+    },
+    "support": {
+      "title": "Dedicated 24/7 Support",
+      "description": "Our expert team is always available to assist you with any queries."
+    },
+    "global": {
+      "title": "Global Coverage",
+      "description": "Access our services from almost anywhere in the world, with multiple currencies supported."
+    }
+  },
+  "cryptoList": {
+    "title": "Wide Range of Cryptocurrencies",
+    "subtitle": "Explore and invest in popular digital assets. Find your next opportunity.",
+    "viewAll": "View All Cryptocurrencies"
+  },
+  "security": {
+    "title": "Your Security is Our Top Priority",
+    "subtitle": "We implement robust security measures to protect your assets and personal information.",
+    "industryLeading": {
+      "title": "Industry-Leading Security",
+      "description": "Utilizing advanced encryption and security protocols to safeguard your data."
+    },
+    "regulated": {
+      "title": "Regulated & Compliant",
+      "description": "Adhering to strict regulatory standards, including KYC/AML policies."
+    },
+    "wallet": {
+      "title": "Secure Wallet Infrastructure",
+      "description": "Multi-signature wallets and cold storage solutions for asset protection."
+    },
+    "privacy": {
+      "title": "Data Privacy",
+      "description": "Your personal information is handled with the utmost care and privacy."
+    },
+    "partners": "Compliance & Security Partners",
+    "stats": {
+      "encryption": "256-bit SSL Encryption",
+      "uptime": "99.9% Uptime Guarantee",
+      "monitoring": "24/7 Security Monitoring"
+    },
+    "safu": "Your funds are SAFU (Secure Asset Fund for Users)"
+  },
+  "testimonials": {
+    "title": "Trusted by Millions Worldwide",
+    "subtitle": "See what our users are saying about their swiftnbuy experience.",
+    "rating": "Excellent",
+    "reviews": "Based on 15,000+ reviews",
+    "sarah": "swiftnbuy made buying crypto so simple! The interface is user-friendly and transactions are fast.",
+    "mike": "Excellent customer support. They helped me through my first purchase and were very patient.",
+    "chen": "Secure platform and transparent fees. I feel safe using swiftnbuy for my crypto investments."
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to common questions about CryptoDesk services and cryptocurrency trading.",
+    "questions": {
+      "what": "What is CryptoDesk?",
+      "secure": "Is CryptoDesk secure?",
+      "payment": "What payment methods are accepted?",
+      "time": "How long do transactions take?"
+    },
+    "answers": {
+      "what": "CryptoDesk is a comprehensive cryptocurrency trading platform that allows you to buy, sell, and manage digital assets securely. We provide fast transactions, competitive rates, and top-tier security for all your crypto needs.",
+      "secure": "Yes, security is our top priority. We use industry-leading encryption, multi-signature wallets, cold storage solutions, and comply with strict regulatory standards including KYC/AML policies to protect your assets and personal information.",
+      "payment": "We accept major payment methods including Visa, Mastercard, PayPal, bank transfers, and various other payment options depending on your region. All payments are processed securely through our verified payment partners.",
+      "time": "Most crypto purchases are completed within minutes. Bank transfers may take 1-3 business days to process. Crypto-to-crypto swaps are typically instant, while crypto sales to fiat may take 1-2 business days to reach your account."
+    }
+  },
+  "cta": {
+    "title": "Ready to Start Your Crypto Journey?",
+    "subtitle": "Join millions who trust CryptoDesk for fast, secure, and easy crypto transactions. Sign up today!",
+    "button": "Get Started Now"
+  },
+  "footer": {
+    "description": "Cryptocurrency services are provided by CryptoDesk Group. Trading cryptocurrencies carries a high level of risk and may not be suitable for all investors.",
+    "language": "Language:",
+    "products": "Products",
+    "company": "Company",
+    "support": "Support",
+    "legal": "Legal",
+    "hiring": "Hiring",
+    "email": "support@cryptodesk.app",
+    "liveChat": "Live Chat",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "copyright": "© 2025 CryptoDesk. All rights reserved.",
+    "buyBitcoin": "Buy Bitcoin",
+    "buyEthereum": "Buy Ethereum",
+    "sellTether": "Sell Tether"
+  },
+  "buySellWidget": {
+    "buy": "Buy",
+    "sell": "Sell",
+    "youPay": "You pay",
+    "youReceive": "You receive",
+    "selectCurrency": "Select currency",
+    "selectCrypto": "Select crypto",
+    "continue": "Continue",
+    "paymentMethods": "Payment Methods",
+    "bankTransfer": "Bank Transfer",
+    "creditCard": "Credit/Debit Card",
+    "popularCryptos": "Popular Cryptos"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "tryAgain": "Try again"
+  }
+}

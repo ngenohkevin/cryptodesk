@@ -1,0 +1,145 @@
+{
+  "header": {
+    "logo": "swiftnbuy",
+    "buyCrypto": "Comprar Cripto",
+    "sellCrypto": "Vender Cripto",
+    "wallet": "Cartera",
+    "aboutUs": "Sobre Nosotros",
+    "careers": "Carreras",
+    "buyNow": "Comprar Ahora",
+    "language": "Español",
+    "languages": {
+      "english": "English",
+      "spanish": "Español",
+      "french": "Français",
+      "german": "Deutsch"
+    }
+  },
+  "hero": {
+    "title": "Compra y Vende Cripto",
+    "titleHighlight": "Instantáneamente",
+    "description": "Con pocos clics - compra, vende y gestiona tus activos cripto.",
+    "features": {
+      "fastEasy": "Rápido y Fácil",
+      "secure": "Seguro y Transparente",
+      "support": "Soporte 24/7"
+    }
+  },
+  "features": {
+    "title": "¿Por qué elegir swiftnbuy?",
+    "subtitle": "Experimenta la diferencia con nuestra plataforma centrada en el usuario y características integrales.",
+    "fast": {
+      "title": "Transacciones Súper Rápidas",
+      "description": "Compra y vende criptomonedas en minutos con nuestros procesos optimizados."
+    },
+    "security": {
+      "title": "Seguridad de Primer Nivel",
+      "description": "Tus activos están protegidos con medidas de seguridad avanzadas y protocolos."
+    },
+    "support": {
+      "title": "Soporte Dedicado 24/7",
+      "description": "Nuestro equipo experto siempre está disponible para ayudarte con cualquier consulta."
+    },
+    "global": {
+      "title": "Cobertura Global",
+      "description": "Accede a nuestros servicios desde casi cualquier lugar del mundo, con múltiples monedas soportadas."
+    }
+  },
+  "cryptoList": {
+    "title": "Amplia Gama de Criptomonedas",
+    "subtitle": "Explora e invierte en activos digitales populares. Encuentra tu próxima oportunidad.",
+    "viewAll": "Ver Todas las Criptomonedas"
+  },
+  "security": {
+    "title": "Tu Seguridad es Nuestra Máxima Prioridad",
+    "subtitle": "Implementamos medidas de seguridad robustas para proteger tus activos e información personal.",
+    "industryLeading": {
+      "title": "Seguridad Líder en la Industria",
+      "description": "Utilizando cifrado avanzado y protocolos de seguridad para proteger tus datos."
+    },
+    "regulated": {
+      "title": "Regulado y Conforme",
+      "description": "Cumpliendo con estrictos estándares regulatorios, incluyendo políticas KYC/AML."
+    },
+    "wallet": {
+      "title": "Infraestructura de Cartera Segura",
+      "description": "Carteras multi-firma y soluciones de almacenamiento en frío para protección de activos."
+    },
+    "privacy": {
+      "title": "Privacidad de Datos",
+      "description": "Tu información personal se maneja con el máximo cuidado y privacidad."
+    },
+    "partners": "Socios de Cumplimiento y Seguridad",
+    "stats": {
+      "encryption": "Cifrado SSL de 256 bits",
+      "uptime": "Garantía de Disponibilidad 99.9%",
+      "monitoring": "Monitoreo de Seguridad 24/7"
+    },
+    "safu": "Tus fondos están SAFU (Fondo Seguro de Activos de Usuarios)"
+  },
+  "testimonials": {
+    "title": "Confiado por Millones en Todo el Mundo",
+    "subtitle": "Mira lo que nuestros usuarios dicen sobre su experiencia con swiftnbuy.",
+    "rating": "Excelente",
+    "reviews": "Basado en más de 15,000 reseñas",
+    "sarah": "¡swiftnbuy hizo que comprar cripto fuera muy simple! La interfaz es fácil de usar y las transacciones son rápidas.",
+    "mike": "Excelente atención al cliente. Me ayudaron con mi primera compra y fueron muy pacientes.",
+    "chen": "Plataforma segura y tarifas transparentes. Me siento seguro usando swiftnbuy para mis inversiones en cripto."
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "subtitle": "Encuentra respuestas a preguntas comunes sobre los servicios de CryptoDesk y el comercio de criptomonedas.",
+    "questions": {
+      "what": "¿Qué es CryptoDesk?",
+      "secure": "¿Es seguro CryptoDesk?",
+      "payment": "¿Qué métodos de pago se aceptan?",
+      "time": "¿Cuánto tiempo tardan las transacciones?"
+    },
+    "answers": {
+      "what": "CryptoDesk es una plataforma integral de comercio de criptomonedas que te permite comprar, vender y gestionar activos digitales de forma segura. Proporcionamos transacciones rápidas, tarifas competitivas y seguridad de primer nivel para todas tus necesidades cripto.",
+      "secure": "Sí, la seguridad es nuestra máxima prioridad. Utilizamos cifrado líder en la industria, carteras multi-firma, soluciones de almacenamiento en frío y cumplimos con estrictos estándares regulatorios incluyendo políticas KYC/AML para proteger tus activos e información personal.",
+      "payment": "Aceptamos los principales métodos de pago incluyendo Visa, Mastercard, PayPal, transferencias bancarias y varias otras opciones de pago dependiendo de tu región. Todos los pagos se procesan de forma segura a través de nuestros socios de pago verificados.",
+      "time": "La mayoría de las compras de cripto se completan en minutos. Las transferencias bancarias pueden tardar de 1-3 días hábiles en procesarse. Los intercambios cripto-a-cripto suelen ser instantáneos, mientras que las ventas de cripto a fiat pueden tardar 1-2 días hábiles en llegar a tu cuenta."
+    }
+  },
+  "cta": {
+    "title": "¿Listo para Comenzar tu Viaje Cripto?",
+    "subtitle": "Únete a millones que confían en CryptoDesk para transacciones de cripto rápidas, seguras y fáciles. ¡Regístrate hoy!",
+    "button": "Comenzar Ahora"
+  },
+  "footer": {
+    "description": "Los servicios de criptomonedas son proporcionados por CryptoDesk Group. El comercio de criptomonedas conlleva un alto nivel de riesgo y puede no ser adecuado para todos los inversores.",
+    "language": "Idioma:",
+    "products": "Productos",
+    "company": "Empresa",
+    "support": "Soporte",
+    "legal": "Legal",
+    "hiring": "Contratando",
+    "email": "support@cryptodesk.app",
+    "liveChat": "Chat en Vivo",
+    "terms": "Términos de Servicio",
+    "privacy": "Política de Privacidad",
+    "copyright": "© 2025 CryptoDesk. Todos los derechos reservados.",
+    "buyBitcoin": "Comprar Bitcoin",
+    "buyEthereum": "Comprar Ethereum",
+    "sellTether": "Vender Tether"
+  },
+  "buySellWidget": {
+    "buy": "Comprar",
+    "sell": "Vender",
+    "youPay": "Pagas",
+    "youReceive": "Recibes",
+    "selectCurrency": "Seleccionar moneda",
+    "selectCrypto": "Seleccionar cripto",
+    "continue": "Continuar",
+    "paymentMethods": "Métodos de Pago",
+    "bankTransfer": "Transferencia Bancaria",
+    "creditCard": "Tarjeta de Crédito/Débito",
+    "popularCryptos": "Criptos Populares"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "tryAgain": "Intentar de nuevo"
+  }
+}
