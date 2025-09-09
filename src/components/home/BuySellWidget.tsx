@@ -70,9 +70,9 @@ export default function BuySellWidget() {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 w-full max-w-[calc(100vw-2rem)] sm:max-w-md border border-gray-100/50 backdrop-blur-sm mx-4 sm:mx-0">
+    <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 w-full max-w-full sm:max-w-md border border-gray-100/50 backdrop-blur-sm">
       {/* Tab Selection */}
-      <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
+      <div className="flex bg-gray-100 rounded-xl p-1 mb-4 sm:mb-6">
         <button
           onClick={() => setMode('buy')}
           className={`flex-1 py-2.5 text-center font-semibold rounded-lg transition-all duration-200 ${
@@ -97,26 +97,26 @@ export default function BuySellWidget() {
 
       {/* From Section */}
       <div className="space-y-3">
-        <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+        <div className="bg-gray-50 rounded-xl p-3 sm:p-4 border border-gray-100">
           <label className="text-xs text-gray-500 font-medium mb-2 block uppercase tracking-wider">
             {mode === 'buy' ? 'I want to spend' : 'I want to sell'}
           </label>
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-2 sm:gap-3">
             <input
               type="number"
               value={fromAmount}
               onChange={(e) => setFromAmount(e.target.value)}
-              className="bg-transparent text-2xl font-bold text-gray-900 placeholder-gray-400 border-none outline-none flex-1 min-w-0"
+              className="bg-transparent text-xl sm:text-2xl font-bold text-gray-900 placeholder-gray-400 border-none outline-none flex-1 min-w-0 w-0"
               placeholder="0"
             />
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(dropdownOpen === 'from' ? null : 'from')}
-                className="flex items-center space-x-2 bg-white rounded-lg px-3 py-2 border border-gray-200 hover:border-gray-300 transition-colors"
+                className="flex items-center space-x-1 sm:space-x-2 bg-white rounded-lg px-2 sm:px-3 py-2 border border-gray-200 hover:border-gray-300 transition-colors flex-shrink-0"
               >
                 {getCurrencyIcon(fromCurrency)}
-                <span className="font-semibold text-gray-700">{fromCurrency}</span>
-                <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${
+                <span className="font-semibold text-gray-700 text-sm sm:text-base">{fromCurrency}</span>
+                <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 text-gray-500 transition-transform flex-shrink-0 ${
                   dropdownOpen === 'from' ? 'rotate-180' : ''
                 }`} />
               </button>
@@ -168,26 +168,26 @@ export default function BuySellWidget() {
         </div>
 
         {/* To Section */}
-        <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+        <div className="bg-gray-50 rounded-xl p-3 sm:p-4 border border-gray-100">
           <label className="text-xs text-gray-500 font-medium mb-2 block uppercase tracking-wider">
             You will receive
           </label>
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-2 sm:gap-3">
             <input
               type="text"
               value={toAmount}
               readOnly
-              className="bg-transparent text-2xl font-bold text-gray-900 placeholder-gray-400 border-none outline-none flex-1 min-w-0"
+              className="bg-transparent text-xl sm:text-2xl font-bold text-gray-900 placeholder-gray-400 border-none outline-none flex-1 min-w-0 w-0"
               placeholder="0"
             />
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(dropdownOpen === 'to' ? null : 'to')}
-                className="flex items-center space-x-2 bg-white rounded-lg px-3 py-2 border border-gray-200 hover:border-gray-300 transition-colors"
+                className="flex items-center space-x-1 sm:space-x-2 bg-white rounded-lg px-2 sm:px-3 py-2 border border-gray-200 hover:border-gray-300 transition-colors flex-shrink-0"
               >
                 {getCurrencyIcon(toCurrency)}
-                <span className="font-semibold text-gray-700">{toCurrency}</span>
-                <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${
+                <span className="font-semibold text-gray-700 text-sm sm:text-base">{toCurrency}</span>
+                <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 text-gray-500 transition-transform flex-shrink-0 ${
                   dropdownOpen === 'to' ? 'rotate-180' : ''
                 }`} />
               </button>
@@ -229,14 +229,14 @@ export default function BuySellWidget() {
         </div>
 
         {/* Action Button */}
-        <button className="w-full bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-bold py-4 rounded-xl transition-all duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+        <button className="w-full bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-bold py-3 sm:py-4 rounded-xl transition-all duration-300 text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
           {mode === 'buy' ? `Buy ${toCurrency}` : `Sell ${fromCurrency}`}
         </button>
 
         {/* Payment Methods */}
-        <div className="mt-6 pt-4 border-t border-gray-100">
-          <p className="text-xs text-gray-500 font-medium mb-3 text-center">Supported Payment Methods:</p>
-          <div className="flex items-center justify-center gap-4">
+        <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-gray-100">
+          <p className="text-xs text-gray-500 font-medium mb-2 sm:mb-3 text-center">Supported Payment Methods:</p>
+          <div className="flex items-center justify-center gap-2 sm:gap-4">
             <div className="w-12 h-8 bg-gray-100 rounded flex items-center justify-center">
               <svg className="h-5" viewBox="0 0 48 32" fill="none">
                 <rect width="48" height="32" rx="4" fill="#1A1F71"/>

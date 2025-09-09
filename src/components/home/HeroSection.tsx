@@ -65,7 +65,7 @@ export default function HeroSection() {
           </div>
 
           {/* Right side - Buy/Sell Widget */}
-          <div className="flex justify-center lg:justify-end animate-scale-in w-full">
+          <div className="flex justify-center lg:justify-end animate-scale-in w-full px-4 sm:px-0">
             <BuySellWidget />
           </div>
         </div>
