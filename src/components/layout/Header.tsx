@@ -89,7 +89,7 @@ export default function Header() {
                   {languages.map((lang) => (
                     <button
                       key={lang.code}
-                      onClick={() => switchLanguage(lang.code)}
+                      onClick={() => switchLanguage(lang.code as 'en' | 'es' | 'fr' | 'de')}
                       className={`w-full text-left px-4 py-2 text-sm transition-colors ${
                         language === lang.code 
                           ? 'bg-primary-50 text-primary-700 font-medium' 

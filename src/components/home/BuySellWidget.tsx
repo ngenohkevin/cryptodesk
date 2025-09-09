@@ -195,7 +195,7 @@ export default function BuySellWidget() {
                   onClick={() => setDropdownOpen(dropdownOpen === 'from' ? null : 'from')}
                   className="flex items-center space-x-1 sm:space-x-2 bg-white rounded-lg px-2 sm:px-3 py-2 border border-gray-200 hover:border-gray-300 transition-colors flex-shrink-0"
                 >
-                  {getCurrencyIcon(fromCurrency)}
+                  {getCurrencyIcon()}
                   <span className="font-semibold text-gray-700 text-sm sm:text-base">{fromCurrency}</span>
                   <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 text-gray-500 transition-transform flex-shrink-0 ${
                     dropdownOpen === 'from' ? 'rotate-180' : ''
@@ -215,7 +215,7 @@ export default function BuySellWidget() {
                         }}
                         className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                       >
-                        {getCurrencyIcon(curr.code)}
+                        {getCurrencyIcon()}
                         <span>{curr.code}</span>
                       </button>
                     ))}
@@ -270,7 +270,7 @@ export default function BuySellWidget() {
                   onClick={() => setDropdownOpen(dropdownOpen === 'to' ? null : 'to')}
                   className="flex items-center space-x-1 sm:space-x-2 bg-white rounded-lg px-2 sm:px-3 py-2 border border-gray-200 hover:border-gray-300 transition-colors flex-shrink-0"
                 >
-                  {getCurrencyIcon(toCurrency)}
+                  {getCurrencyIcon()}
                   <span className="font-semibold text-gray-700 text-sm sm:text-base">{toCurrency}</span>
                   <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 text-gray-500 transition-transform flex-shrink-0 ${
                     dropdownOpen === 'to' ? 'rotate-180' : ''
@@ -290,7 +290,7 @@ export default function BuySellWidget() {
                         }}
                         className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                       >
-                        {getCurrencyIcon(curr.code)}
+                        {getCurrencyIcon()}
                         <span>{curr.code}</span>
                       </button>
                     ))}
