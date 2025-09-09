@@ -2,27 +2,30 @@
 
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
-const faqs = [
+const getFaqs = (t: (key: string) => string) => [
   {
-    question: "What is CryptoDesk?",
-    answer: "CryptoDesk is a comprehensive cryptocurrency trading platform that allows you to buy, sell, and manage digital assets securely. We provide fast transactions, competitive rates, and top-tier security for all your crypto needs."
+    question: t('faq.questions.what'),
+    answer: t('faq.answers.what')
   },
   {
-    question: "Is CryptoDesk secure?",
-    answer: "Yes, security is our top priority. We use industry-leading encryption, multi-signature wallets, cold storage solutions, and comply with strict regulatory standards including KYC/AML policies to protect your assets and personal information."
+    question: t('faq.questions.secure'),
+    answer: t('faq.answers.secure')
   },
   {
-    question: "What payment methods are accepted?",
-    answer: "We accept major payment methods including Visa, Mastercard, PayPal, bank transfers, and various other payment options depending on your region. All payments are processed securely through our verified payment partners."
+    question: t('faq.questions.payment'),
+    answer: t('faq.answers.payment')
   },
   {
-    question: "How long do transactions take?",
-    answer: "Most crypto purchases are completed within minutes. Bank transfers may take 1-3 business days to process. Crypto-to-crypto swaps are typically instant, while crypto sales to fiat may take 1-2 business days to reach your account."
+    question: t('faq.questions.time'),
+    answer: t('faq.answers.time')
   }
 ]
 
 export default function FAQSection() {
+  const { t } = useLanguage()
+  const faqs = getFaqs(t)
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   const toggleFAQ = (index: number) => {
@@ -37,10 +40,10 @@ export default function FAQSection() {
             <span className="text-2xl">❓</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Frequently Asked Questions
+            {t('faq.title')}
           </h2>
           <p className="text-xl text-gray-600">
-            Find answers to common questions about CryptoDesk services and cryptocurrency trading.
+            {t('faq.subtitle')}
           </p>
         </div>
 

@@ -19,8 +19,8 @@ html {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: #ffffff;
-    color: #171717;
+    background: rgb(243, 245, 247);
+    color: rgb(53, 59, 65);
   }
 }
 

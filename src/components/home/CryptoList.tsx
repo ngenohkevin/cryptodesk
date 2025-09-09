@@ -3,94 +3,158 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { TrendingUp, TrendingDown } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface CryptoData {
   symbol: string
   name: string
-  price: string
+  price: number
   change: number
   icon: string
   color: string
 }
 
-const cryptoData: CryptoData[] = [
+const initialCryptoData: CryptoData[] = [
   {
     symbol: 'BTC',
     name: 'Bitcoin',
-    price: '$67,890.12',
-    change: 2.35,
-    icon: '₿',
+    price: 0,
+    change: 0,
+    icon: '/images/bitcoin-btc-logo.png',
     color: 'orange'
   },
   {
     symbol: 'ETH',
     name: 'Ethereum',
-    price: '$3,750.45',
-    change: 1.80,
-    icon: 'Ξ',
-    color: 'purple'
+    price: 0,
+    change: 0,
+    icon: '/images/ethereum-logo.png',
+    color: 'blue'
+  },
+  {
+    symbol: 'LTC',
+    name: 'Litecoin',
+    price: 0,
+    change: 0,
+    icon: '/images/litecoin-ltc-logo.png',
+    color: 'gray'
   },
   {
     symbol: 'USDT',
     name: 'Tether',
-    price: '$1.00',
-    change: -0.01,
-    icon: '₮',
+    price: 0,
+    change: 0,
+    icon: '/images/tether-usdt-logo.png',
     color: 'green'
   },
   {
-    symbol: 'BNB',
-    name: 'BNB',
-    price: '$610.70',
-    change: 0.55,
-    icon: 'BNB',
-    color: 'yellow'
+    symbol: 'TRX',
+    name: 'TRON',
+    price: 0,
+    change: 0,
+    icon: '/images/tron-trx-logo.png',
+    color: 'red'
+  },
+  {
+    symbol: 'XRP',
+    name: 'Ripple',
+    price: 0,
+    change: 0,
+    icon: '/images/xrp-xrp-logo.png',
+    color: 'blue'
   },
   {
     symbol: 'SOL',
     name: 'Solana',
-    price: '$165.20',
-    change: -1.10,
-    icon: 'SOL',
+    price: 0,
+    change: 0,
+    icon: '/images/solana-sol-logo.png',
     color: 'purple'
+  },
+  {
+    symbol: 'DOGE',
+    name: 'Dogecoin',
+    price: 0,
+    change: 0,
+    icon: '/images/dogecoin-doge-logo.png',
+    color: 'yellow'
   }
 ]
 
 export default function CryptoList() {
-  const [prices, setPrices] = useState(cryptoData)
+  const { t } = useLanguage()
+  const [prices, setPrices] = useState(initialCryptoData)
   const [animateIndex, setAnimateIndex] = useState(-1)
+  const [loading, setLoading] = useState(true)
 
-  // Simulate price updates
+  // Fetch real-time prices from CoinGecko
+  const fetchCryptoPrices = async () => {
+    try {
+      const coinIds = {
+        'BTC': 'bitcoin',
+        'ETH': 'ethereum',
+        'LTC': 'litecoin',
+        'USDT': 'tether',
+        'TRX': 'tron',
+        'XRP': 'ripple',
+        'SOL': 'solana',
+        'DOGE': 'dogecoin'
+      }
+      
+      const ids = Object.values(coinIds).join(',')
+      const response = await fetch(
+        `https://corsproxy.io/?https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`
+      )
+      
+      if (response.ok) {
+        const data = await response.json()
+        
+        setPrices(prev => prev.map(crypto => {
+          const coinId = coinIds[crypto.symbol as keyof typeof coinIds]
+          if (data[coinId]) {
+            return {
+              ...crypto,
+              price: data[coinId].usd,
+              change: data[coinId].usd_24h_change || 0
+            }
+          }
+          return crypto
+        }))
+      }
+    } catch {
+      // Error fetching crypto prices
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fetch prices on mount and every 30 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      setPrices(prev => prev.map((crypto, index) => {
-        const variance = Math.random() * 2 - 1 // -1 to 1
-        const newChange = crypto.change + variance * 0.1
-        
-        // Random animation trigger
-        if (Math.random() > 0.8) {
-          setAnimateIndex(index)
-          setTimeout(() => setAnimateIndex(-1), 500)
-        }
-        
-        return {
-          ...crypto,
-          change: newChange
-        }
-      }))
-    }, 3000)
-
+    fetchCryptoPrices()
+    const interval = setInterval(fetchCryptoPrices, 30000)
     return () => clearInterval(interval)
   }, [])
 
-  const getIconBg = (color: string) => {
-    const bgColors = {
-      orange: 'bg-orange-500',
-      purple: 'bg-purple-500',
-      green: 'bg-green-500',
-      yellow: 'bg-yellow-500',
+  // Animation trigger
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Math.random() > 0.8) {
+        const randomIndex = Math.floor(Math.random() * prices.length)
+        setAnimateIndex(randomIndex)
+        setTimeout(() => setAnimateIndex(-1), 500)
+      }
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, [prices.length])
+
+
+  const formatPrice = (price: number) => {
+    if (price === 0 && loading) return t('common.loading')
+    if (price >= 1) {
+      return `$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
     }
-    return bgColors[color as keyof typeof bgColors] || 'bg-gray-500'
+    return `$${price.toFixed(4)}`
   }
 
   return (
@@ -98,14 +162,14 @@ export default function CryptoList() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 lg:mb-16 animate-fade-in">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Wide Range of Cryptocurrencies
+            {t('cryptoList.title')}
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            Explore and invest in popular digital assets. Find your next opportunity.
+            {t('cryptoList.subtitle')}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {prices.map((crypto, index) => (
             <div
               key={crypto.symbol}
@@ -118,8 +182,12 @@ export default function CryptoList() {
             >
               {/* Header with Icon and Name */}
               <div className="flex items-center gap-3 mb-4">
-                <div className={`w-10 h-10 ${getIconBg(crypto.color)} rounded-full flex items-center justify-center text-white font-bold`}>
-                  {crypto.icon}
+                <div className="w-10 h-10 rounded-full p-1.5 bg-white shadow-sm border border-gray-100">
+                  <img 
+                    src={crypto.icon} 
+                    alt={`${crypto.name} logo`}
+                    className="w-full h-full object-contain rounded-full"
+                  />
                 </div>
                 <div className="flex-1">
                   <h3 className="font-bold text-gray-900">{crypto.name}</h3>
@@ -130,7 +198,7 @@ export default function CryptoList() {
               {/* Price and Change */}
               <div className="space-y-3">
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{crypto.price}</p>
+                  <p className="text-2xl font-bold text-gray-900">{formatPrice(crypto.price)}</p>
                   <div className="flex items-center gap-1 mt-1">
                     {crypto.change >= 0 ? (
                       <>
@@ -155,25 +223,13 @@ export default function CryptoList() {
                   href="/#buy-crypto"
                   className="block w-full bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold py-2.5 rounded-xl text-center transition-all duration-300 transform hover:scale-105"
                 >
-                  Buy Now
+                  {t('header.buyNow')}
                 </Link>
               </div>
             </div>
           ))}
         </div>
 
-        {/* View All Button */}
-        <div className="text-center mt-10">
-          <Link 
-            href="/cryptocurrencies"
-            className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold transition-colors"
-          >
-            View All Cryptocurrencies
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
-        </div>
       </div>
     </section>
   )

@@ -1,6 +1,7 @@
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Download, Shield, ArrowUpDown, Send, TrendingUp } from 'lucide-react'
 
 export const metadata = {
@@ -69,17 +70,14 @@ export default function WalletPage() {
 
               <div className="flex justify-center lg:justify-end">
                 <div className="relative">
-                  <div className="w-80 h-96 bg-gradient-to-br from-blue-600 to-purple-600 rounded-[3rem] p-1 shadow-2xl">
-                    <div className="w-full h-full bg-black rounded-[2.5rem] flex items-center justify-center">
-                      <div className="text-white text-center">
-                        <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4">
-                          <span className="text-blue-600 font-bold text-xl">C</span>
-                        </div>
-                        <p className="text-sm opacity-75">CryptoDesk Wallet</p>
-                        <p className="text-xs opacity-50 mt-2">Coming Soon</p>
-                      </div>
-                    </div>
-                  </div>
+                  <Image
+                    src="/images/app_screenshot.webp"
+                    alt="CryptoDesk Mobile App Screenshot"
+                    width={320}
+                    height={640}
+                    className="w-80 h-auto"
+                    priority
+                  />
                   {/* Floating elements */}
                   <div className="absolute -top-4 -right-4 w-12 h-12 bg-yellow-400 rounded-full opacity-20 animate-pulse" />
                   <div className="absolute -bottom-6 -left-6 w-8 h-8 bg-purple-400 rounded-full opacity-30 animate-pulse" />

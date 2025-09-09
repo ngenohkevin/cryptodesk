@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import LiveChat from '@/components/common/LiveChat'
+import { LanguageProvider } from '@/contexts/LanguageContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,9 +25,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {children}
-        <LiveChat />
+      <body className={inter.className} suppressHydrationWarning={true}>
+        <LanguageProvider>
+          {children}
+          <LiveChat />
+        </LanguageProvider>
       </body>
     </html>
   )

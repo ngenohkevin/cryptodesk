@@ -2,38 +2,42 @@
 
 import { Star } from 'lucide-react'
 import Image from 'next/image'
+import { useLanguage } from '@/contexts/LanguageContext'
 
-const testimonials = [
+const getTestimonials = (t: (key: string) => string) => [
   {
     rating: 5,
-    text: "swiftnbuy made buying crypto so simple! The interface is user-friendly and transactions are fast.",
+    text: t('testimonials.sarah'),
     author: "Sarah L.",
     avatar: "https://i.pravatar.cc/150?img=1"
   },
   {
     rating: 5,
-    text: "Excellent customer support. They helped me through my first purchase and were very patient.",
+    text: t('testimonials.mike'),
     author: "Mike T.",
     avatar: "https://i.pravatar.cc/150?img=3"
   },
   {
     rating: 5,
-    text: "Secure platform and transparent fees. I feel safe using swiftnbuy for my crypto investments.",
+    text: t('testimonials.chen'),
     author: "Chen W.",
     avatar: "https://i.pravatar.cc/150?img=5"
   }
 ]
 
 export default function TestimonialsSection() {
+  const { t } = useLanguage()
+  const testimonials = getTestimonials(t)
+  
   return (
     <section className="py-16 lg:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 lg:mb-16 animate-fade-in">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Trusted by Millions Worldwide
+            {t('testimonials.title')}
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            See what our users are saying about their swiftnbuy experience.
+            {t('testimonials.subtitle')}
           </p>
         </div>
 
@@ -51,8 +55,8 @@ export default function TestimonialsSection() {
                   <Star key={i} className="w-6 h-6 fill-yellow-400 text-yellow-400" />
                 ))}
               </div>
-              <p className="font-bold text-xl text-gray-900">Excellent</p>
-              <p className="text-gray-600">Based on 15,000+ reviews</p>
+              <p className="font-bold text-xl text-gray-900">{t('testimonials.rating')}</p>
+              <p className="text-gray-600">{t('testimonials.reviews')}</p>
             </div>
           </div>
         </div>

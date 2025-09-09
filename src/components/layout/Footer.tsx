@@ -1,7 +1,11 @@
+'use client'
+
 import Link from 'next/link'
 import { ChevronDown, Mail, MessageCircle } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function Footer() {
+  const { t } = useLanguage()
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -15,13 +19,13 @@ export default function Footer() {
               <span className="text-xl font-semibold">CryptoDesk</span>
             </Link>
             <p className="text-gray-300 text-sm">
-              Cryptocurrency services are provided by CryptoDesk Group. Trading cryptocurrencies carries a high level of risk and may not be suitable for all investors.
+              {t('footer.description')}
             </p>
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-300">Language:</span>
+              <span className="text-sm text-gray-300">{t('footer.language')}</span>
               <div className="flex items-center space-x-1 cursor-pointer">
                 <span className="text-sm">🌐</span>
-                <span className="text-sm">English</span>
+                <span className="text-sm">{t('header.language')}</span>
                 <ChevronDown className="w-4 h-4 text-gray-400" />
               </div>
             </div>
@@ -29,21 +33,21 @@ export default function Footer() {
 
           {/* Products */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Products</h3>
+            <h3 className="font-semibold text-lg">{t('footer.products')}</h3>
             <ul className="space-y-3">
               <li>
                 <Link href="/#buy-crypto" className="text-gray-300 hover:text-white transition-colors">
-                  Buy Bitcoin
+                  {t('footer.buyBitcoin')}
                 </Link>
               </li>
               <li>
                 <Link href="/#buy-crypto" className="text-gray-300 hover:text-white transition-colors">
-                  Buy Ethereum
+                  {t('footer.buyEthereum')}
                 </Link>
               </li>
               <li>
                 <Link href="/#sell-crypto" className="text-gray-300 hover:text-white transition-colors">
-                  Sell Tether
+                  {t('footer.sellTether')}
                 </Link>
               </li>
             </ul>
@@ -51,22 +55,22 @@ export default function Footer() {
 
           {/* Company */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Company</h3>
+            <h3 className="font-semibold text-lg">{t('footer.company')}</h3>
             <ul className="space-y-3">
               <li>
                 <Link href="/about" className="text-gray-300 hover:text-white transition-colors">
-                  About Us
+                  {t('header.aboutUs')}
                 </Link>
               </li>
               <li>
                 <Link href="/wallet" className="text-gray-300 hover:text-white transition-colors">
-                  Wallet
+                  {t('header.wallet')}
                 </Link>
               </li>
               <li>
                 <Link href="/careers" className="text-gray-300 hover:text-white transition-colors flex items-center space-x-2">
-                  <span>Careers</span>
-                  <span className="bg-green-600 text-xs px-2 py-1 rounded-full">Hiring</span>
+                  <span>{t('header.careers')}</span>
+                  <span className="bg-green-600 text-xs px-2 py-1 rounded-full">{t('footer.hiring')}</span>
                 </Link>
               </li>
             </ul>
@@ -74,32 +78,32 @@ export default function Footer() {
 
           {/* Support */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Support</h3>
+            <h3 className="font-semibold text-lg">{t('footer.support')}</h3>
             <ul className="space-y-3">
               <li>
                 <Link href="mailto:support@cryptodesk.app" className="text-gray-300 hover:text-white transition-colors flex items-center space-x-2">
                   <Mail className="w-4 h-4" />
-                  <span>support@cryptodesk.app</span>
+                  <span>{t('footer.email')}</span>
                 </Link>
               </li>
               <li>
                 <Link href="#" className="text-gray-300 hover:text-white transition-colors flex items-center space-x-2">
                   <MessageCircle className="w-4 h-4" />
-                  <span>Live Chat</span>
+                  <span>{t('footer.liveChat')}</span>
                 </Link>
               </li>
             </ul>
             <div className="space-y-2 mt-6">
-              <h4 className="font-semibold">Legal</h4>
+              <h4 className="font-semibold">{t('footer.legal')}</h4>
               <ul className="space-y-2">
                 <li>
                   <Link href="/terms-of-service" className="text-gray-300 hover:text-white transition-colors text-sm">
-                    Terms of Service
+                    {t('footer.terms')}
                   </Link>
                 </li>
                 <li>
                   <Link href="/privacy-policy" className="text-gray-300 hover:text-white transition-colors text-sm">
-                    Privacy Policy
+                    {t('footer.privacy')}
                   </Link>
                 </li>
               </ul>
@@ -108,7 +112,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-          <p className="text-gray-300 text-sm">© 2025 CryptoDesk. All rights reserved.</p>
+          <p className="text-gray-300 text-sm">{t('footer.copyright')}</p>
         </div>
       </div>
     </footer>

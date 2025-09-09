@@ -1,42 +1,46 @@
+'use client'
+
 import { Zap, Shield, Headphones, Globe } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 const features = [
   {
     icon: Zap,
-    title: 'Lightning-Fast Transactions',
-    description: 'Buy and sell cryptocurrencies in minutes with our optimized processes.',
+    titleKey: 'features.fast.title',
+    descriptionKey: 'features.fast.description',
     color: 'orange',
   },
   {
     icon: Shield,
-    title: 'Top-Tier Security',
-    description: 'Your assets are protected with advanced security measures and protocols.',
+    titleKey: 'features.security.title',
+    descriptionKey: 'features.security.description',
     color: 'blue',
   },
   {
     icon: Headphones,
-    title: 'Dedicated 24/7 Support',
-    description: 'Our expert team is always available to assist you with any queries.',
+    titleKey: 'features.support.title',
+    descriptionKey: 'features.support.description',
     color: 'purple',
   },
   {
     icon: Globe,
-    title: 'Global Coverage',
-    description: 'Access our services from almost anywhere in the world, with multiple currencies supported.',
+    titleKey: 'features.global.title',
+    descriptionKey: 'features.global.description',
     color: 'green',
   },
 ]
 
 export default function FeaturesSection() {
+  const { t } = useLanguage()
   return (
     <section className="py-16 lg:py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 lg:mb-16 animate-fade-in">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Why Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-700">swiftnbuy?</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4" style={{ color: '#353B40' }}>
+{t('features.title')}
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            Experience the difference with our user-focused platform and comprehensive features.
+            {t('features.subtitle')}
           </p>
         </div>
 
@@ -59,11 +63,11 @@ export default function FeaturesSection() {
                 <div className={`inline-flex items-center justify-center w-14 h-14 lg:w-16 lg:h-16 ${colorClasses[feature.color as keyof typeof colorClasses]} rounded-2xl mb-4 transition-all duration-300`}>
                   <IconComponent className="w-7 h-7 lg:w-8 lg:h-8" />
                 </div>
-                <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-3">
-                  {feature.title}
+                <h3 className="text-lg lg:text-xl font-bold mb-3" style={{ color: '#353B40' }}>
+                  {t(feature.titleKey)}
                 </h3>
                 <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
-                  {feature.description}
+                  {t(feature.descriptionKey)}
                 </p>
               </div>
             )

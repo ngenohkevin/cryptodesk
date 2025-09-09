@@ -1,71 +1,146 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { ArrowDownUp, ChevronDown } from 'lucide-react'
 
 export default function BuySellWidget() {
+  const { t } = useLanguage()
   const [mode, setMode] = useState<'buy' | 'sell'>('buy')
   const [fromAmount, setFromAmount] = useState('100')
-  const [toAmount, setToAmount] = useState('0.001478')
+  const [toAmount, setToAmount] = useState('0')
   const [fromCurrency, setFromCurrency] = useState('USD')
   const [toCurrency, setToCurrency] = useState('BTC')
   const [dropdownOpen, setDropdownOpen] = useState<'from' | 'to' | null>(null)
+  const [dropdownExpanded, setDropdownExpanded] = useState<'from' | 'to' | null>(null)
 
-  const currencies = {
-    fiat: [
-      { code: 'USD', name: 'US Dollar', symbol: '$' },
-      { code: 'EUR', name: 'Euro', symbol: '€' },
-      { code: 'GBP', name: 'British Pound', symbol: '£' },
-    ],
-    crypto: [
-      { code: 'BTC', name: 'Bitcoin', icon: '₿', color: 'orange' },
-      { code: 'ETH', name: 'Ethereum', icon: 'Ξ', color: 'purple' },
-      { code: 'USDT', name: 'Tether', icon: '₮', color: 'green' },
-      { code: 'BNB', name: 'BNB', icon: 'BNB', color: 'yellow' },
-      { code: 'SOL', name: 'Solana', icon: 'SOL', color: 'purple' },
-    ]
+  const cryptoCurrencies = [
+    { code: 'BTC', name: 'Bitcoin', color: 'orange' },
+    { code: 'ETH', name: 'Ethereum', color: 'blue' },
+    { code: 'LTC', name: 'Litecoin', color: 'gray' },
+    { code: 'USDT', name: 'Tether', color: 'green' },
+    { code: 'USDT (TRC20)', name: 'Tether TRC20', color: 'green' },
+    { code: 'TRX', name: 'TRON', color: 'red' },
+    { code: 'XRP', name: 'Ripple', color: 'blue' },
+    { code: 'SOL', name: 'Solana', color: 'purple' },
+    { code: 'DOGE', name: 'Dogecoin', color: 'yellow' },
+    { code: 'ADA', name: 'Cardano', color: 'blue' },
+  ]
+
+  const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({})
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  // Fetch real-time exchange rates from CoinGecko API
+  const fetchExchangeRates = async () => {
+    setLoading(true)
+    try {
+      // Map our crypto codes to CoinGecko IDs
+      const coinIds = {
+        'BTC': 'bitcoin',
+        'ETH': 'ethereum',
+        'LTC': 'litecoin',
+        'USDT': 'tether',
+        'USDT (TRC20)': 'tether',
+        'TRX': 'tron',
+        'XRP': 'ripple',
+        'SOL': 'solana',
+        'DOGE': 'dogecoin',
+        'ADA': 'cardano'
+      }
+      
+      const ids = Object.values(coinIds).filter((v, i, a) => a.indexOf(v) === i).join(',')
+      const response = await fetch(
+        `https://corsproxy.io/?https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`
+      )
+      
+      if (response.ok) {
+        const data = await response.json()
+        const rates: Record<string, number> = {}
+        
+        Object.entries(coinIds).forEach(([symbol, coinId]) => {
+          if (data[coinId]?.usd) {
+            rates[symbol] = data[coinId].usd
+          }
+        })
+        
+        setExchangeRates(rates)
+      }
+    } catch {
+      // Error fetching exchange rates
+    } finally {
+      setLoading(false)
+    }
   }
 
-  // Simulated exchange rates
-  const exchangeRates: Record<string, Record<string, number>> = {
-    USD: { BTC: 0.00001478, ETH: 0.000267, USDT: 1, BNB: 0.00164, SOL: 0.00605 },
-    BTC: { USD: 67650, ETH: 18.05, USDT: 67650, BNB: 110.8, SOL: 409.3 },
-    ETH: { USD: 3750, BTC: 0.0554, USDT: 3750, BNB: 6.14, SOL: 22.7 },
-  }
+  // Fetch exchange rates on component mount and every 30 seconds
+  useEffect(() => {
+    fetchExchangeRates()
+    const interval = setInterval(fetchExchangeRates, 30000) // Update every 30 seconds
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
-    // Calculate conversion
-    if (fromAmount && exchangeRates[fromCurrency]?.[toCurrency]) {
-      const converted = (parseFloat(fromAmount) * exchangeRates[fromCurrency][toCurrency]).toFixed(6)
-      setToAmount(converted)
+    // Set currencies and default amounts based on mode
+    if (mode === 'buy') {
+      setFromCurrency('USD')
+      setFromAmount('100') // Default $100 for buy mode
+      if (toCurrency === 'USD') setToCurrency('BTC')
+    } else {
+      setToCurrency('USD')
+      setFromCurrency('BTC')
+      setFromAmount('0.1') // Default 0.1 BTC for sell mode
     }
-  }, [fromAmount, fromCurrency, toCurrency])
+  }, [mode])
+
+  useEffect(() => {
+    // Calculate conversion using real-time rates
+    setError('') // Clear any previous errors
+    
+    if (fromAmount && exchangeRates) {
+      const amount = parseFloat(fromAmount)
+      if (isNaN(amount) || amount <= 0) {
+        setToAmount('0')
+        return
+      }
+
+      if (mode === 'buy') {
+        // USD to crypto: divide USD amount by crypto price
+        const cryptoPrice = exchangeRates[toCurrency]
+        if (cryptoPrice) {
+          const converted = (amount / cryptoPrice).toFixed(8)
+          setToAmount(converted)
+          
+          // Check minimum buy amount
+          if (amount < 20) {
+            setError('Minimum buy amount is $20')
+          }
+        }
+      } else {
+        // Crypto to USD: multiply crypto amount by crypto price
+        const cryptoPrice = exchangeRates[fromCurrency]
+        if (cryptoPrice) {
+          const usdValue = amount * cryptoPrice
+          const converted = usdValue.toFixed(2)
+          setToAmount(converted)
+          
+          // Check minimum sell amount
+          if (usdValue < 45) {
+            setError('Minimum sell amount is $45')
+          }
+        }
+      }
+    }
+  }, [fromAmount, fromCurrency, toCurrency, exchangeRates, mode])
 
   const handleSwapCurrencies = () => {
-    setFromCurrency(toCurrency)
-    setToCurrency(fromCurrency)
+    setMode(mode === 'buy' ? 'sell' : 'buy')
     setFromAmount(toAmount)
     setToAmount(fromAmount)
   }
 
-  const getCurrencyIcon = (code: string) => {
-    const crypto = currencies.crypto.find(c => c.code === code)
-    if (crypto) {
-      return (
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-xs
-          ${crypto.color === 'orange' ? 'bg-orange-500' : ''}
-          ${crypto.color === 'purple' ? 'bg-purple-500' : ''}
-          ${crypto.color === 'green' ? 'bg-green-500' : ''}
-          ${crypto.color === 'yellow' ? 'bg-yellow-500' : ''}
-        `}>
-          {crypto.icon}
-        </div>
-      )
-    }
-    const fiat = currencies.fiat.find(c => c.code === code)
-    if (fiat) {
-      return <span className="text-gray-600 font-semibold">{fiat.symbol}</span>
-    }
+  const getCurrencyIcon = () => {
+    // No icons - just return null to match the original site
     return null
   }
 
@@ -81,7 +156,7 @@ export default function BuySellWidget() {
               : 'text-gray-600 hover:text-gray-900'
           }`}
         >
-          Buy
+          {t('buySellWidget.buy')}
         </button>
         <button
           onClick={() => setMode('sell')}
@@ -91,69 +166,74 @@ export default function BuySellWidget() {
               : 'text-gray-600 hover:text-gray-900'
           }`}
         >
-          Sell
+          {t('buySellWidget.sell')}
         </button>
       </div>
 
       {/* From Section */}
       <div className="space-y-3">
-        <div className="bg-gray-50 rounded-xl p-3 sm:p-4 border border-gray-100">
+        <div className="bg-gray-50 rounded-xl p-3 sm:p-4 border border-gray-200">
           <label className="text-xs text-gray-500 font-medium mb-2 block uppercase tracking-wider">
-            {mode === 'buy' ? 'I want to spend' : 'I want to sell'}
+            {mode === 'buy' ? t('buySellWidget.youPay') : t('buySellWidget.youPay')}
           </label>
           <div className="flex items-center justify-between gap-2 sm:gap-3">
             <input
               type="number"
               value={fromAmount}
               onChange={(e) => setFromAmount(e.target.value)}
-              className="bg-transparent text-xl sm:text-2xl font-bold text-gray-900 placeholder-gray-400 border-none outline-none flex-1 min-w-0 w-0"
+              className="bg-white text-sm sm:text-base font-normal text-gray-900 placeholder-gray-400 border border-gray-200 rounded-md px-2 py-1.5 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-200 transition-colors flex-1 min-w-0"
               placeholder="0"
+              disabled={loading}
             />
-            <div className="relative">
-              <button
-                onClick={() => setDropdownOpen(dropdownOpen === 'from' ? null : 'from')}
-                className="flex items-center space-x-1 sm:space-x-2 bg-white rounded-lg px-2 sm:px-3 py-2 border border-gray-200 hover:border-gray-300 transition-colors flex-shrink-0"
-              >
-                {getCurrencyIcon(fromCurrency)}
-                <span className="font-semibold text-gray-700 text-sm sm:text-base">{fromCurrency}</span>
-                <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 text-gray-500 transition-transform flex-shrink-0 ${
-                  dropdownOpen === 'from' ? 'rotate-180' : ''
-                }`} />
-              </button>
-              
-              {dropdownOpen === 'from' && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10 max-h-64 overflow-y-auto">
-                  <div className="px-3 py-1 text-xs text-gray-500 font-semibold">FIAT</div>
-                  {currencies.fiat.map(curr => (
-                    <button
-                      key={curr.code}
-                      onClick={() => {
-                        setFromCurrency(curr.code)
-                        setDropdownOpen(null)
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                    >
-                      <span className="font-semibold">{curr.symbol}</span>
-                      <span>{curr.code}</span>
-                    </button>
-                  ))}
-                  <div className="px-3 py-1 text-xs text-gray-500 font-semibold mt-2">CRYPTO</div>
-                  {currencies.crypto.map(curr => (
-                    <button
-                      key={curr.code}
-                      onClick={() => {
-                        setFromCurrency(curr.code)
-                        setDropdownOpen(null)
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                    >
-                      {getCurrencyIcon(curr.code)}
-                      <span>{curr.code}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            {mode === 'buy' ? (
+              <div className="flex items-center space-x-1 sm:space-x-2 bg-white rounded-lg px-2 sm:px-3 py-2 border border-gray-200 flex-shrink-0">
+                <span className="font-semibold text-gray-700 text-sm sm:text-base">USD</span>
+              </div>
+            ) : (
+              <div className="relative">
+                <button
+                  onClick={() => setDropdownOpen(dropdownOpen === 'from' ? null : 'from')}
+                  className="flex items-center space-x-1 sm:space-x-2 bg-white rounded-lg px-2 sm:px-3 py-2 border border-gray-200 hover:border-gray-300 transition-colors flex-shrink-0"
+                >
+                  {getCurrencyIcon(fromCurrency)}
+                  <span className="font-semibold text-gray-700 text-sm sm:text-base">{fromCurrency}</span>
+                  <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 text-gray-500 transition-transform flex-shrink-0 ${
+                    dropdownOpen === 'from' ? 'rotate-180' : ''
+                  }`} />
+                </button>
+                
+                {dropdownOpen === 'from' && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10 max-h-80 overflow-y-auto">
+                    <div className="px-3 py-1 text-xs text-gray-500 font-semibold">CRYPTO</div>
+                    {(dropdownExpanded === 'from' ? cryptoCurrencies : cryptoCurrencies.slice(0, 6)).map(curr => (
+                      <button
+                        key={curr.code}
+                        onClick={() => {
+                          setFromCurrency(curr.code)
+                          setDropdownOpen(null)
+                          setDropdownExpanded(null)
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                      >
+                        {getCurrencyIcon(curr.code)}
+                        <span>{curr.code}</span>
+                      </button>
+                    ))}
+                    {dropdownExpanded !== 'from' && cryptoCurrencies.length > 6 && (
+                      <button
+                        onClick={() => setDropdownExpanded('from')}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 flex items-center justify-center gap-1 border-t border-gray-200 mt-1 pt-3"
+                      >
+                        <span className="text-xs">Show {cryptoCurrencies.length - 6} more</span>
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -168,95 +248,101 @@ export default function BuySellWidget() {
         </div>
 
         {/* To Section */}
-        <div className="bg-gray-50 rounded-xl p-3 sm:p-4 border border-gray-100">
+        <div className="bg-gray-50 rounded-xl p-3 sm:p-4 border border-gray-200">
           <label className="text-xs text-gray-500 font-medium mb-2 block uppercase tracking-wider">
-            You will receive
+            {t('buySellWidget.youReceive')}
           </label>
           <div className="flex items-center justify-between gap-2 sm:gap-3">
             <input
               type="text"
-              value={toAmount}
+              value={loading ? 'Loading...' : toAmount}
               readOnly
-              className="bg-transparent text-xl sm:text-2xl font-bold text-gray-900 placeholder-gray-400 border-none outline-none flex-1 min-w-0 w-0"
+              className="bg-white text-sm sm:text-base font-normal text-gray-900 placeholder-gray-400 border border-gray-200 rounded-md px-2 py-1.5 outline-none flex-1 min-w-0 cursor-default"
               placeholder="0"
             />
-            <div className="relative">
-              <button
-                onClick={() => setDropdownOpen(dropdownOpen === 'to' ? null : 'to')}
-                className="flex items-center space-x-1 sm:space-x-2 bg-white rounded-lg px-2 sm:px-3 py-2 border border-gray-200 hover:border-gray-300 transition-colors flex-shrink-0"
-              >
-                {getCurrencyIcon(toCurrency)}
-                <span className="font-semibold text-gray-700 text-sm sm:text-base">{toCurrency}</span>
-                <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 text-gray-500 transition-transform flex-shrink-0 ${
-                  dropdownOpen === 'to' ? 'rotate-180' : ''
-                }`} />
-              </button>
-              
-              {dropdownOpen === 'to' && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10 max-h-64 overflow-y-auto">
-                  <div className="px-3 py-1 text-xs text-gray-500 font-semibold">CRYPTO</div>
-                  {currencies.crypto.map(curr => (
-                    <button
-                      key={curr.code}
-                      onClick={() => {
-                        setToCurrency(curr.code)
-                        setDropdownOpen(null)
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                    >
-                      {getCurrencyIcon(curr.code)}
-                      <span>{curr.code}</span>
-                    </button>
-                  ))}
-                  <div className="px-3 py-1 text-xs text-gray-500 font-semibold mt-2">FIAT</div>
-                  {currencies.fiat.map(curr => (
-                    <button
-                      key={curr.code}
-                      onClick={() => {
-                        setToCurrency(curr.code)
-                        setDropdownOpen(null)
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                    >
-                      <span className="font-semibold">{curr.symbol}</span>
-                      <span>{curr.code}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            {mode === 'sell' ? (
+              <div className="flex items-center space-x-1 sm:space-x-2 bg-white rounded-lg px-2 sm:px-3 py-2 border border-gray-200 flex-shrink-0">
+                <span className="font-semibold text-gray-700 text-sm sm:text-base">USD</span>
+              </div>
+            ) : (
+              <div className="relative">
+                <button
+                  onClick={() => setDropdownOpen(dropdownOpen === 'to' ? null : 'to')}
+                  className="flex items-center space-x-1 sm:space-x-2 bg-white rounded-lg px-2 sm:px-3 py-2 border border-gray-200 hover:border-gray-300 transition-colors flex-shrink-0"
+                >
+                  {getCurrencyIcon(toCurrency)}
+                  <span className="font-semibold text-gray-700 text-sm sm:text-base">{toCurrency}</span>
+                  <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 text-gray-500 transition-transform flex-shrink-0 ${
+                    dropdownOpen === 'to' ? 'rotate-180' : ''
+                  }`} />
+                </button>
+                
+                {dropdownOpen === 'to' && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10 max-h-80 overflow-y-auto">
+                    <div className="px-3 py-1 text-xs text-gray-500 font-semibold">CRYPTO</div>
+                    {(dropdownExpanded === 'to' ? cryptoCurrencies : cryptoCurrencies.slice(0, 6)).map(curr => (
+                      <button
+                        key={curr.code}
+                        onClick={() => {
+                          setToCurrency(curr.code)
+                          setDropdownOpen(null)
+                          setDropdownExpanded(null)
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                      >
+                        {getCurrencyIcon(curr.code)}
+                        <span>{curr.code}</span>
+                      </button>
+                    ))}
+                    {dropdownExpanded !== 'to' && cryptoCurrencies.length > 6 && (
+                      <button
+                        onClick={() => setDropdownExpanded('to')}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 flex items-center justify-center gap-1 border-t border-gray-200 mt-1 pt-3"
+                      >
+                        <span className="text-xs">Show {cryptoCurrencies.length - 6} more</span>
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
+        {/* Error Message */}
+        {error && (
+          <div className="text-red-500 text-sm text-center py-2">
+            {error}
+          </div>
+        )}
+
         {/* Action Button */}
-        <button className="w-full bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-bold py-3 sm:py-4 rounded-xl transition-all duration-300 text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-          {mode === 'buy' ? `Buy ${toCurrency}` : `Sell ${fromCurrency}`}
+        <button 
+          className={`w-full font-bold py-3 sm:py-4 rounded-xl transition-all duration-300 text-base sm:text-lg shadow-lg transform ${
+            error 
+              ? 'bg-gray-400 cursor-not-allowed' 
+              : 'bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white hover:shadow-xl hover:-translate-y-0.5'
+          }`}
+          disabled={!!error}
+        >
+          {mode === 'buy' ? `${t('buySellWidget.buy')} ${toCurrency}` : `${t('buySellWidget.sell')} ${fromCurrency}`}
         </button>
 
         {/* Payment Methods */}
         <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-gray-100">
-          <p className="text-xs text-gray-500 font-medium mb-2 sm:mb-3 text-center">Supported Payment Methods:</p>
-          <div className="flex items-center justify-center gap-2 sm:gap-4">
-            <div className="w-12 h-8 bg-gray-100 rounded flex items-center justify-center">
-              <svg className="h-5" viewBox="0 0 48 32" fill="none">
-                <rect width="48" height="32" rx="4" fill="#1A1F71"/>
-                <path d="M20.5 12L16 20H14L11.5 14.5C11.3 14 11.2 13.8 10.7 13.5C10 13.2 9 12.8 8 12.5L8.1 12H12.4C13 12 13.5 12.4 13.6 13.1L14.9 19.2L18.4 12H20.5ZM29.8 17.3C29.8 14.9 26.5 14.8 26.5 13.8C26.5 13.5 26.8 13.1 27.5 13C28 12.9 29.1 12.9 30.4 13.5L30.8 11.7C30.1 11.4 29.1 11.2 28 11.2C25.9 11.2 24.5 12.4 24.5 14C24.5 15.2 25.5 15.9 26.3 16.3C27.1 16.7 27.4 17 27.4 17.4C27.4 18 26.7 18.2 26.1 18.2C24.8 18.2 24.1 17.9 23.4 17.5L23 19.3C23.7 19.7 24.9 20 26.2 20C28.5 20 29.8 18.8 29.8 17.3ZM37 20H38.8L37.2 12H35.6C35.1 12 34.6 12.3 34.4 12.8L31.2 20H33.3L33.8 18.5H36.5L37 20ZM34.4 16.8L35.5 13.9L36.2 16.8H34.4ZM22.8 12L21.2 20H23.2L24.8 12H22.8Z" fill="white"/>
-              </svg>
+          <p className="text-xs text-gray-500 font-medium mb-2 sm:mb-3 text-center">{t('buySellWidget.paymentMethods')}:</p>
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            <div className="flex items-center justify-center h-8 sm:h-9 border border-gray-100 rounded-md bg-gray-50/50 hover:bg-gray-50 transition-colors">
+              <img src="/images/visa.svg" alt="Visa" className="h-4 w-auto max-w-full object-contain" />
             </div>
-            <div className="w-12 h-8 bg-gray-100 rounded flex items-center justify-center">
-              <svg className="h-5" viewBox="0 0 48 32" fill="none">
-                <rect width="48" height="32" rx="4" fill="#EB001B"/>
-                <circle cx="19" cy="16" r="7" fill="#FF5F00"/>
-                <circle cx="29" cy="16" r="7" fill="#F79E1B"/>
-              </svg>
+            <div className="flex items-center justify-center h-8 sm:h-9 border border-gray-100 rounded-md bg-gray-50/50 hover:bg-gray-50 transition-colors">
+              <img src="/images/Mastercard-logo.svg" alt="Mastercard" className="h-4 w-auto max-w-full object-contain" />
             </div>
-            <div className="w-12 h-8 bg-gray-100 rounded flex items-center justify-center">
-              <svg className="h-5" viewBox="0 0 48 32" fill="none">
-                <rect width="48" height="32" rx="4" fill="#003087"/>
-                <path d="M17 11H14.5C13.7 11 13 11.7 13 12.5V19.5C13 20.3 13.7 21 14.5 21H17C18.7 21 20 19.7 20 18V14C20 12.3 18.7 11 17 11ZM18 18C18 18.6 17.6 19 17 19H15V13H17C17.6 13 18 13.4 18 14V18Z" fill="white"/>
-                <path d="M25 11H23V21H25V17H26C27.7 17 29 15.7 29 14C29 12.3 27.7 11 26 11ZM26 15H25V13H26C26.6 13 27 13.4 27 14C27 14.6 26.6 15 26 15Z" fill="#009CDE"/>
-                <path d="M34 11H32V19H30V21H36V19H34V11Z" fill="white"/>
-              </svg>
+            <div className="flex items-center justify-center h-8 sm:h-9 border border-gray-100 rounded-md bg-gray-50/50 hover:bg-gray-50 transition-colors">
+              <img src="/images/PayPal.svg" alt="PayPal" className="h-4 w-auto max-w-full object-contain" />
             </div>
           </div>
         </div>
