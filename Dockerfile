@@ -1,48 +1,42 @@
-FROM node:18-alpine
+FROM node:18-alpine AS base
 
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
+# Install dependencies based on the preferred package manager
+COPY package.json package-lock.json* ./
 RUN npm ci
 
-# Copy source code  
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Debug: List files before build
-RUN echo "Files before build:" && ls -la
-
-# Build the application for static export
+# Build the application
 RUN npm run build
 
-# Debug: List files after build
-RUN echo "Files after build:" && ls -la && echo "Contents of out directory:" && ls -la out/ || echo "No out directory found"
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
 
-# Install nginx
-RUN apk add --no-cache nginx
+ENV NODE_ENV=production
 
-# Clear default nginx html and copy our files
-RUN rm -rf /usr/share/nginx/html/* && mkdir -p /usr/share/nginx/html
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Copy built files or fallback to a simple test page
-RUN if [ -d "out" ]; then \
-      echo "Copying built files from out/" && \
-      cp -r out/* /usr/share/nginx/html/; \
-    else \
-      echo "No out directory, creating test page" && \
-      echo "<h1>CryptoDesk - Build Failed</h1><p>Next.js build did not produce output</p>" > /usr/share/nginx/html/index.html; \
-    fi
+# Copy the built application
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+USER nextjs
 
-# Create nginx directories and set permissions
-RUN mkdir -p /run/nginx && chown -R nginx:nginx /var/log/nginx /usr/share/nginx/html
+EXPOSE 3000
 
-# Expose port 80
-EXPOSE 80
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "server.js"]

@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Server-side rendering enabled (no 'output: export')
+  // Server-side rendering enabled with standalone output for Docker
+  output: 'standalone',
   images: {
     remotePatterns: [
       {
