@@ -18,10 +18,10 @@ export default function HeroSection() {
         </div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 pb-48">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left side - Content */}
-          <div className="text-center lg:text-left animate-fade-in w-full overflow-hidden">
+          <div className="text-center lg:text-left animate-fade-in w-full">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight" style={{ color: '#353B40' }}>
               {t('hero.title')}
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-secondary-600">
@@ -62,7 +62,7 @@ export default function HeroSection() {
           </div>
 
           {/* Right side - Buy/Sell Widget */}
-          <div className="flex justify-center lg:justify-end animate-scale-in w-full overflow-hidden">
+          <div className="flex justify-center lg:justify-end animate-scale-in w-full overflow-visible">
             <div className="w-full max-w-sm sm:max-w-md px-4 sm:px-0">
               <BuySellWidget />
             </div>

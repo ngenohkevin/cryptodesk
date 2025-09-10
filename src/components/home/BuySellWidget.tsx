@@ -201,7 +201,7 @@ export default function BuySellWidget() {
                 </button>
                 
                 {dropdownOpen === 'from' && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50 max-h-80 overflow-y-auto">
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-[99999] max-h-80 overflow-y-auto">
                     <div className="px-3 py-1 text-xs text-gray-500 font-semibold">CRYPTO</div>
                     {(dropdownExpanded === 'from' ? cryptoCurrencies : cryptoCurrencies.slice(0, 6)).map(curr => (
                       <button
@@ -276,7 +276,7 @@ export default function BuySellWidget() {
                 </button>
                 
                 {dropdownOpen === 'to' && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50 max-h-80 overflow-y-auto">
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-[99999] max-h-80 overflow-y-auto">
                     <div className="px-3 py-1 text-xs text-gray-500 font-semibold">CRYPTO</div>
                     {(dropdownExpanded === 'to' ? cryptoCurrencies : cryptoCurrencies.slice(0, 6)).map(curr => (
                       <button
