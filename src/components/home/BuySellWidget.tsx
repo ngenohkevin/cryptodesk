@@ -143,7 +143,7 @@ export default function BuySellWidget() {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 w-full max-w-full sm:max-w-md border border-gray-100/50 backdrop-blur-sm">
+    <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 w-full border border-gray-100/50 backdrop-blur-sm">
       {/* Tab Selection */}
       <div className="flex bg-gray-100 rounded-xl p-1 mb-4 sm:mb-6">
         <button
@@ -179,7 +179,7 @@ export default function BuySellWidget() {
               type="number"
               value={fromAmount}
               onChange={(e) => setFromAmount(e.target.value)}
-              className="bg-white text-sm sm:text-base font-normal text-gray-900 placeholder-gray-400 border border-gray-200 rounded-md px-2 py-1.5 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-200 transition-colors flex-1 min-w-0"
+              className="bg-white text-sm sm:text-base font-normal text-gray-900 placeholder-gray-400 border border-gray-200 rounded-md px-2 py-1.5 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-200 transition-colors flex-1 min-w-0 max-w-[60%]"
               placeholder="0"
               disabled={loading}
             />
@@ -201,7 +201,7 @@ export default function BuySellWidget() {
                 </button>
                 
                 {dropdownOpen === 'from' && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10 max-h-80 overflow-y-auto">
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50 max-h-80 overflow-y-auto">
                     <div className="px-3 py-1 text-xs text-gray-500 font-semibold">CRYPTO</div>
                     {(dropdownExpanded === 'from' ? cryptoCurrencies : cryptoCurrencies.slice(0, 6)).map(curr => (
                       <button
@@ -255,7 +255,7 @@ export default function BuySellWidget() {
               type="text"
               value={loading ? 'Loading...' : toAmount}
               readOnly
-              className="bg-white text-sm sm:text-base font-normal text-gray-900 placeholder-gray-400 border border-gray-200 rounded-md px-2 py-1.5 outline-none flex-1 min-w-0 cursor-default"
+              className="bg-white text-sm sm:text-base font-normal text-gray-900 placeholder-gray-400 border border-gray-200 rounded-md px-2 py-1.5 outline-none flex-1 min-w-0 max-w-[60%] cursor-default"
               placeholder="0"
             />
             {mode === 'sell' ? (
@@ -276,7 +276,7 @@ export default function BuySellWidget() {
                 </button>
                 
                 {dropdownOpen === 'to' && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10 max-h-80 overflow-y-auto">
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50 max-h-80 overflow-y-auto">
                     <div className="px-3 py-1 text-xs text-gray-500 font-semibold">CRYPTO</div>
                     {(dropdownExpanded === 'to' ? cryptoCurrencies : cryptoCurrencies.slice(0, 6)).map(curr => (
                       <button
