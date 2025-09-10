@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { ArrowDownUp, ChevronDown } from 'lucide-react'
+import { cryptoApiClient } from '@/utils/cryptoApiClient'
 
 export default function BuySellWidget() {
   const { t } = useLanguage()
@@ -30,44 +31,30 @@ export default function BuySellWidget() {
   const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [retryCount, setRetryCount] = useState(0)
 
-  // Fetch real-time exchange rates from CoinGecko API
+  // Fetch real-time exchange rates using the robust API service
   const fetchExchangeRates = async () => {
     setLoading(true)
     try {
-      // Map our crypto codes to CoinGecko IDs
-      const coinIds = {
-        'BTC': 'bitcoin',
-        'ETH': 'ethereum',
-        'LTC': 'litecoin',
-        'USDT': 'tether',
-        'USDT (TRC20)': 'tether',
-        'TRX': 'tron',
-        'XRP': 'ripple',
-        'SOL': 'solana',
-        'DOGE': 'dogecoin',
-        'ADA': 'cardano'
-      }
+      const rates = await cryptoApiClient.fetchExchangeRates()
       
-      const ids = Object.values(coinIds).filter((v, i, a) => a.indexOf(v) === i).join(',')
-      const response = await fetch(
-        `https://corsproxy.io/?https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`
-      )
-      
-      if (response.ok) {
-        const data = await response.json()
-        const rates: Record<string, number> = {}
-        
-        Object.entries(coinIds).forEach(([symbol, coinId]) => {
-          if (data[coinId]?.usd) {
-            rates[symbol] = data[coinId].usd
-          }
-        })
-        
+      // Only update if we got valid rates
+      if (Object.keys(rates).length > 0) {
         setExchangeRates(rates)
+        setRetryCount(0) // Reset retry count on success
+      } else if (retryCount < 3) {
+        // Retry if we got empty rates
+        setRetryCount(prev => prev + 1)
+        setTimeout(() => fetchExchangeRates(), 2000)
       }
     } catch {
-      // Error fetching exchange rates
+      // Failed to fetch exchange rates
+      // Retry up to 3 times with delay
+      if (retryCount < 3) {
+        setRetryCount(prev => prev + 1)
+        setTimeout(() => fetchExchangeRates(), 2000)
+      }
     } finally {
       setLoading(false)
     }
@@ -108,7 +95,18 @@ export default function BuySellWidget() {
         // USD to crypto: divide USD amount by crypto price
         const cryptoPrice = exchangeRates[toCurrency]
         if (cryptoPrice) {
-          const converted = (amount / cryptoPrice).toFixed(8)
+          const result = amount / cryptoPrice
+          // Use appropriate decimal places based on the crypto value
+          let converted: string
+          if (result >= 1) {
+            converted = result.toFixed(4) // 4 decimals for whole coins
+          } else if (result >= 0.01) {
+            converted = result.toFixed(6) // 6 decimals for smaller amounts
+          } else {
+            converted = result.toFixed(8) // 8 decimals for very small amounts
+          }
+          // Remove trailing zeros
+          converted = parseFloat(converted).toString()
           setToAmount(converted)
           
           // Check minimum buy amount

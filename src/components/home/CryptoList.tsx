@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { TrendingUp, TrendingDown } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { cryptoApiClient } from '@/utils/cryptoApiClient'
 
 interface CryptoData {
   symbol: string
@@ -86,45 +87,43 @@ export default function CryptoList() {
   const [prices, setPrices] = useState(initialCryptoData)
   const [animateIndex, setAnimateIndex] = useState(-1)
   const [loading, setLoading] = useState(true)
+  const [retryCount, setRetryCount] = useState(0)
 
-  // Fetch real-time prices from CoinGecko
+  // Fetch real-time prices using the robust API service
   const fetchCryptoPrices = async () => {
     try {
-      const coinIds = {
-        'BTC': 'bitcoin',
-        'ETH': 'ethereum',
-        'LTC': 'litecoin',
-        'USDT': 'tether',
-        'TRX': 'tron',
-        'XRP': 'ripple',
-        'SOL': 'solana',
-        'DOGE': 'dogecoin'
-      }
+      const priceData = await cryptoApiClient.fetchCryptoPrices()
       
-      const ids = Object.values(coinIds).join(',')
-      const response = await fetch(
-        `https://corsproxy.io/?https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`
-      )
-      
-      if (response.ok) {
-        const data = await response.json()
-        
+      if (priceData.length > 0) {
         setPrices(prev => prev.map(crypto => {
-          const coinId = coinIds[crypto.symbol as keyof typeof coinIds]
-          if (data[coinId]) {
+          const updatedData = priceData.find(p => p.symbol === crypto.symbol)
+          if (updatedData && updatedData.price > 0) {
             return {
               ...crypto,
-              price: data[coinId].usd,
-              change: data[coinId].usd_24h_change || 0
+              price: updatedData.price,
+              change: updatedData.change
             }
           }
           return crypto
         }))
+        setRetryCount(0) // Reset retry count on success
+        setLoading(false)
+      } else if (retryCount < 3) {
+        // Retry if we got empty data
+        setRetryCount(prev => prev + 1)
+        setTimeout(() => fetchCryptoPrices(), 2000)
+      } else {
+        setLoading(false)
       }
     } catch {
-      // Error fetching crypto prices
-    } finally {
-      setLoading(false)
+      // Failed to fetch crypto prices
+      // Retry up to 3 times with delay
+      if (retryCount < 3) {
+        setRetryCount(prev => prev + 1)
+        setTimeout(() => fetchCryptoPrices(), 2000)
+      } else {
+        setLoading(false)
+      }
     }
   }
 
