@@ -62,8 +62,8 @@ export default function HeroSection() {
           </div>
 
           {/* Right side - Buy/Sell Widget */}
-          <div className="relative flex justify-center lg:justify-end animate-scale-in w-full overflow-visible">
-            <div className="w-full max-w-sm sm:max-w-md px-4 sm:px-0">
+          <div className="relative flex justify-center lg:justify-end animate-scale-in w-full" style={{ zIndex: 20 }}>
+            <div className="w-full max-w-sm sm:max-w-md px-4 sm:px-0" style={{ position: 'relative', zIndex: 30 }}>
               <BuySellWidget />
             </div>
           </div>
