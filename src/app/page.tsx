@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main id="buy-crypto">
+      <main id="buy-crypto" className="relative">
         <HeroSection />
         <FeaturesSection />
         <CryptoList />

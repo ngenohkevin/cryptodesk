@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { ArrowDownUp, ChevronDown } from 'lucide-react'
 import { cryptoApiClient } from '@/utils/cryptoApiClient'
@@ -14,6 +14,8 @@ export default function BuySellWidget() {
   const [toCurrency, setToCurrency] = useState('BTC')
   const [dropdownOpen, setDropdownOpen] = useState<'from' | 'to' | null>(null)
   const [dropdownExpanded, setDropdownExpanded] = useState<'from' | 'to' | null>(null)
+  const fromDropdownRef = useRef<HTMLDivElement>(null)
+  const toDropdownRef = useRef<HTMLDivElement>(null)
 
   const cryptoCurrencies = [
     { code: 'BTC', name: 'Bitcoin', color: 'orange' },
@@ -137,13 +139,38 @@ export default function BuySellWidget() {
     setToAmount(fromAmount)
   }
 
+  const handleDropdownToggle = (dropdown: 'from' | 'to') => {
+    setDropdownOpen(dropdownOpen === dropdown ? null : dropdown)
+    setDropdownExpanded(null) // Reset expanded state when toggling
+  }
+
+  // Click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node
+      
+      if (dropdownOpen === 'from' && fromDropdownRef.current && !fromDropdownRef.current.contains(target)) {
+        setDropdownOpen(null)
+        setDropdownExpanded(null)
+      } else if (dropdownOpen === 'to' && toDropdownRef.current && !toDropdownRef.current.contains(target)) {
+        setDropdownOpen(null)
+        setDropdownExpanded(null)
+      }
+    }
+
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [dropdownOpen])
+
   const getCurrencyIcon = () => {
     // No icons - just return null to match the original site
     return null
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 w-full border border-gray-100/50 backdrop-blur-sm">
+    <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 w-full border border-gray-100/50 backdrop-blur-sm relative overflow-visible">
       {/* Tab Selection */}
       <div className="flex bg-gray-100 rounded-xl p-1 mb-4 sm:mb-6">
         <button
@@ -169,7 +196,7 @@ export default function BuySellWidget() {
       </div>
 
       {/* From Section */}
-      <div className="space-y-3">
+      <div className="space-y-3 relative">
         <div className="bg-gray-50 rounded-xl p-3 sm:p-4 border border-gray-200">
           <label className="text-xs text-gray-500 font-medium mb-2 block uppercase tracking-wider">
             {mode === 'buy' ? t('buySellWidget.youPay') : t('buySellWidget.youPay')}
@@ -188,7 +215,7 @@ export default function BuySellWidget() {
                 <span className="font-semibold text-gray-700 text-sm sm:text-base">USD</span>
               </div>
             ) : (
-              <div className="relative">
+              <div className="relative" ref={fromDropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(dropdownOpen === 'from' ? null : 'from')}
                   className="flex items-center space-x-1 sm:space-x-2 bg-white rounded-lg px-2 sm:px-3 py-2 border border-gray-200 hover:border-gray-300 transition-colors flex-shrink-0"
@@ -201,7 +228,7 @@ export default function BuySellWidget() {
                 </button>
                 
                 {dropdownOpen === 'from' && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-[99999] max-h-80 overflow-y-auto">
+                  <div className="absolute right-0 sm:top-full sm:mt-2 bottom-full mb-2 sm:bottom-auto sm:mb-0 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-[9999] max-h-[300px] overflow-y-auto">
                     <div className="px-3 py-1 text-xs text-gray-500 font-semibold">CRYPTO</div>
                     {(dropdownExpanded === 'from' ? cryptoCurrencies : cryptoCurrencies.slice(0, 6)).map(curr => (
                       <button
@@ -263,9 +290,9 @@ export default function BuySellWidget() {
                 <span className="font-semibold text-gray-700 text-sm sm:text-base">USD</span>
               </div>
             ) : (
-              <div className="relative">
+              <div className="relative" ref={toDropdownRef}>
                 <button
-                  onClick={() => setDropdownOpen(dropdownOpen === 'to' ? null : 'to')}
+                  onClick={() => handleDropdownToggle('to')}
                   className="flex items-center space-x-1 sm:space-x-2 bg-white rounded-lg px-2 sm:px-3 py-2 border border-gray-200 hover:border-gray-300 transition-colors flex-shrink-0"
                 >
                   {getCurrencyIcon()}
@@ -276,7 +303,7 @@ export default function BuySellWidget() {
                 </button>
                 
                 {dropdownOpen === 'to' && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-[99999] max-h-80 overflow-y-auto">
+                  <div className="absolute right-0 sm:top-full sm:mt-2 bottom-full mb-2 sm:bottom-auto sm:mb-0 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-[9999] max-h-[300px] overflow-y-auto">
                     <div className="px-3 py-1 text-xs text-gray-500 font-semibold">CRYPTO</div>
                     {(dropdownExpanded === 'to' ? cryptoCurrencies : cryptoCurrencies.slice(0, 6)).map(curr => (
                       <button
