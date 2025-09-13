@@ -263,10 +263,13 @@ export default function BuySellWidget() {
 
   const handleBuySell = () => {
     if (mode === 'sell') {
+      // Sell flow - complete implementation
       setCurrentView('email')
     } else {
-      // For buy mode, keep existing modal flow for now
-      setCurrentView('email')
+      // Buy flow - to be implemented
+      alert('Buy feature is coming soon! The sell feature is fully functional.')
+      // TODO: Implement buy flow when ready
+      // setCurrentView('buy-flow-start')
     }
   }
   
@@ -372,7 +375,28 @@ export default function BuySellWidget() {
       'pe': 'Peru',
       'tw': 'Taiwan',
       'is': 'Iceland',
-      'ua': 'Ukraine'
+      'ua': 'Ukraine',
+      // Add sanctioned countries mapping (for codes)
+      'ir': 'Iran',
+      'ru': 'Russia',
+      'kp': 'North Korea',
+      'sy': 'Syria',
+      'cu': 'Cuba',
+      'by': 'Belarus',
+      'mm': 'Myanmar',
+      've': 'Venezuela',
+      'sd': 'Sudan',
+      'ss': 'South Sudan',
+      'zw': 'Zimbabwe',
+      'ly': 'Libya',
+      'so': 'Somalia',
+      'ye': 'Yemen',
+      'cf': 'Central African Republic',
+      'af': 'Afghanistan',
+      'ml': 'Mali',
+      'ni': 'Nicaragua',
+      'lb': 'Lebanon',
+      'iq': 'Iraq'
     }
     
     // List of all valid countries (comprehensive list)
@@ -476,11 +500,58 @@ export default function BuySellWidget() {
       // Iraq (certain regions)
       'iraq', 'iq'
     ]
-    
-    const isRestricted = restrictedCountries.some(restricted => 
-      countryLower === restricted || 
-      normalizedCountry.toLowerCase() === restricted
-    )
+
+    // Additional mapping for sanctioned country names to codes
+    const sanctionedCountryMappings: Record<string, string[]> = {
+      'ir': ['iran', 'islamic republic of iran'],
+      'ru': ['russia', 'russian federation'],
+      'kp': ['north korea', 'dprk', 'democratic people\'s republic of korea', 'democratic peoples republic of korea'],
+      'sy': ['syria', 'syrian arab republic'],
+      'cu': ['cuba'],
+      'by': ['belarus'],
+      'mm': ['myanmar', 'burma'],
+      've': ['venezuela'],
+      'sd': ['sudan'],
+      'ss': ['south sudan'],
+      'zw': ['zimbabwe'],
+      'ly': ['libya'],
+      'so': ['somalia'],
+      'ye': ['yemen'],
+      'cf': ['central african republic', 'car'],
+      'af': ['afghanistan'],
+      'ml': ['mali'],
+      'ni': ['nicaragua'],
+      'lb': ['lebanon'],
+      'iq': ['iraq']
+    }
+
+    // Check if input matches any sanctioned country (code or full name)
+    const isRestricted = restrictedCountries.some(restricted => {
+      // Direct match with the restricted list
+      if (countryLower === restricted || normalizedCountry.toLowerCase() === restricted) {
+        return true
+      }
+
+      // Check if the input contains the restricted country name
+      if (countryLower.includes(restricted) || restricted.includes(countryLower)) {
+        return true
+      }
+
+      return false
+    }) || Object.entries(sanctionedCountryMappings).some(([code, names]) => {
+      // Check if input is the country code
+      if (countryLower === code.toLowerCase()) {
+        return true
+      }
+
+      // Check if input matches any of the full names for this sanctioned country
+      return names.some(name => {
+        const nameLower = name.toLowerCase()
+        return countryLower === nameLower ||
+               countryLower.includes(nameLower) ||
+               nameLower.includes(countryLower)
+      })
+    })
     
     if (isRestricted) {
       setErrors({ country: 'Service is currently not available in this country due to regulatory restrictions.' })
@@ -574,6 +645,8 @@ export default function BuySellWidget() {
     } else if (currentView === 'country') {
       setCurrentView('email')
     } else if (currentView === 'payout') {
+      // Reset country verification when going back from payout to country
+      setFormData(prev => ({ ...prev, countryVerified: false }))
       setCurrentView('country')
     } else if (currentView === 'deposit') {
       setCurrentView('payout')
@@ -688,8 +761,7 @@ export default function BuySellWidget() {
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${
                     formData.countryVerified ? 'border-green-500 bg-green-50' : 'border-gray-300'
                   }`}
-                  disabled={formData.countryVerified}
-                  autoFocus={currentView === 'country'}
+                  autoFocus={currentView === 'country' && !formData.countryVerified}
                 />
                 {formData.countryVerified && (
                   <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-600" />
@@ -1176,16 +1248,20 @@ export default function BuySellWidget() {
           )}
 
           {/* Action Button */}
-          <button 
+          <button
             onClick={handleBuySell}
             className={`w-full font-bold py-3 sm:py-4 rounded-xl transition-all duration-300 text-base sm:text-lg shadow-lg transform ${
-              error 
-                ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white hover:shadow-xl hover:-translate-y-0.5'
+              error
+                ? 'bg-gray-400 cursor-not-allowed'
+                : mode === 'buy'
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white hover:shadow-xl hover:-translate-y-0.5'
+                  : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white hover:shadow-xl hover:-translate-y-0.5'
             }`}
             disabled={!!error}
           >
-            {mode === 'buy' ? `${t('buySellWidget.buy')} ${toCurrency}` : `${t('buySellWidget.sell')} ${fromCurrency}`}
+            {mode === 'buy'
+              ? `${t('buySellWidget.buy')} ${toCurrency} (Coming Soon)`
+              : `${t('buySellWidget.sell')} ${fromCurrency}`}
           </button>
 
           {/* Payment Methods */}
