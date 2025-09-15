@@ -23,7 +23,7 @@ export default function BuySellWidget() {
   const toPortalRef = useRef<HTMLDivElement>(null)
   
   // Form state for multi-step flow
-  const [currentView, setCurrentView] = useState<'widget' | 'email' | 'country' | 'payout' | 'deposit' | 'confirmation'>('widget')
+  const [currentView, setCurrentView] = useState<'widget' | 'email' | 'country' | 'payout' | 'deposit' | 'confirmation' | 'buy-email' | 'buy-wallet' | 'buy-payment' | 'buy-otp' | 'buy-processing' | 'buy-complete'>('widget')
   const [formData, setFormData] = useState({
     email: '',
     country: '',
@@ -32,7 +32,20 @@ export default function BuySellWidget() {
     lastName: '',
     bankName: '',
     accountNumber: '',
-    routingNumber: ''
+    routingNumber: '',
+    // Buy flow fields
+    cryptoAddress: '',
+    cardNumber: '',
+    cardExpiry: '',
+    cardCVV: '',
+    cardholderName: '',
+    billingAddress: '',
+    billingCity: '',
+    billingState: '',
+    billingZip: '',
+    billingCountry: '',
+    // OTP field
+    otpCode: ''
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [depositSent, setDepositSent] = useState(false)
@@ -266,10 +279,8 @@ export default function BuySellWidget() {
       // Sell flow - complete implementation
       setCurrentView('email')
     } else {
-      // Buy flow - to be implemented
-      alert('Buy feature is coming soon! The sell feature is fully functional.')
-      // TODO: Implement buy flow when ready
-      // setCurrentView('buy-flow-start')
+      // Buy flow - start with email verification
+      setCurrentView('buy-email')
     }
   }
   
@@ -640,6 +651,7 @@ export default function BuySellWidget() {
   }
 
   const handleBack = () => {
+    // Sell flow navigation
     if (currentView === 'email') {
       setCurrentView('widget')
     } else if (currentView === 'country') {
@@ -661,18 +673,83 @@ export default function BuySellWidget() {
         lastName: '',
         bankName: '',
         accountNumber: '',
-        routingNumber: ''
+        routingNumber: '',
+        cryptoAddress: '',
+        cardNumber: '',
+        cardExpiry: '',
+        cardCVV: '',
+        cardholderName: '',
+        billingAddress: '',
+        billingCity: '',
+        billingState: '',
+        billingZip: '',
+        billingCountry: '',
+        otpCode: ''
       })
       setErrors({})
       setDepositSent(false)
       setTransactionId('')
     }
+    // Buy flow navigation
+    else if (currentView === 'buy-email') {
+      setCurrentView('widget')
+    } else if (currentView === 'buy-wallet') {
+      setCurrentView('buy-email')
+    } else if (currentView === 'buy-payment') {
+      setCurrentView('buy-wallet')
+    } else if (currentView === 'buy-otp') {
+      setCurrentView('buy-payment')
+    } else if (currentView === 'buy-processing') {
+      // Can't go back from processing
+      return
+    } else if (currentView === 'buy-complete') {
+      // Reset and go to widget
+      setCurrentView('widget')
+      setFormData({
+        email: '',
+        country: '',
+        countryVerified: false,
+        firstName: '',
+        lastName: '',
+        bankName: '',
+        accountNumber: '',
+        routingNumber: '',
+        cryptoAddress: '',
+        cardNumber: '',
+        cardExpiry: '',
+        cardCVV: '',
+        cardholderName: '',
+        billingAddress: '',
+        billingCity: '',
+        billingState: '',
+        billingZip: '',
+        billingCountry: ''
+      })
+      setErrors({})
+      setTransactionId('')
+    }
     setErrors({})
+  }
+
+  // BTC address validation function
+  const validateBTCAddress = (address: string): boolean => {
+    // Remove whitespace
+    address = address.trim()
+
+    // Check if address is empty
+    if (!address) return false
+
+    // BTC address patterns
+    const legacyPattern = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/
+    const segwitPattern = /^bc1[a-z0-9]{39,59}$/
+    const segwitTestnetPattern = /^tb1[a-z0-9]{39,59}$/
+
+    return legacyPattern.test(address) || segwitPattern.test(address) || segwitTestnetPattern.test(address)
   }
 
   // Single container with all views inside
   return (
-    <div className="bg-white rounded-2xl shadow-xl w-full border border-gray-100/50 backdrop-blur-sm relative overflow-hidden" style={{ minHeight: '620px' }}>
+    <div className="bg-white rounded-2xl shadow-xl w-full border border-gray-100/50 backdrop-blur-sm relative overflow-hidden" style={{ minHeight: currentView === 'buy-payment' ? '720px' : '620px', maxHeight: '90vh' }}>
       {/* Email View */}
       <div className={`absolute inset-0 p-4 sm:p-6 lg:p-8 transition-transform duration-300 ${currentView === 'email' ? 'translate-x-0' : 'translate-x-full'}`}>
         <button
@@ -1043,6 +1120,580 @@ export default function BuySellWidget() {
         </div>
       </div>
 
+      {/* Buy Flow: Email View */}
+      <div className={`absolute inset-0 p-4 sm:p-6 lg:p-8 transition-transform duration-300 ${currentView === 'buy-email' ? 'translate-x-0' : 'translate-x-full'}`}>
+        <button
+          onClick={handleBack}
+          className="absolute top-4 left-4 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10"
+        >
+          <ArrowLeft className="w-5 h-5 text-gray-600" />
+        </button>
+
+        <div className="flex flex-col justify-center" style={{ minHeight: '480px' }}>
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Almost there!</h3>
+            <p className="text-gray-600">Please enter your email address to continue.</p>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email Address
+              </label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => {
+                  setFormData(prev => ({ ...prev, email: e.target.value }))
+                  setErrors(prev => ({ ...prev, email: '' }))
+                }}
+                placeholder="you@example.com"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                autoFocus={currentView === 'buy-email'}
+              />
+              {errors.email && (
+                <p className="text-sm text-red-500 mt-2">{errors.email}</p>
+              )}
+              <p className="text-xs text-gray-500 mt-2">A verification link will be sent to your email.</p>
+            </div>
+
+            <button
+              onClick={() => {
+                if (!formData.email) {
+                  setErrors({ email: 'Email is required' })
+                  return
+                }
+                const emailError = validateEmail(formData.email)
+                if (emailError) {
+                  setErrors({ email: emailError })
+                  return
+                }
+                setErrors({})
+                setCurrentView('buy-wallet')
+              }}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg transition-all duration-200"
+            >
+              Proceed
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Buy Flow: Wallet Address View */}
+      <div className={`absolute inset-0 p-4 sm:p-6 lg:p-8 transition-transform duration-300 ${currentView === 'buy-wallet' ? 'translate-x-0' : 'translate-x-full'}`}>
+        <button
+          onClick={handleBack}
+          className="absolute top-4 left-4 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10"
+        >
+          <ArrowLeft className="w-5 h-5 text-gray-600" />
+        </button>
+
+        <div className="flex flex-col justify-center" style={{ minHeight: '480px' }}>
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Enter Your {toCurrency} Address</h3>
+            <p className="text-gray-600">Where should we send your cryptocurrency?</p>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {toCurrency} Wallet Address
+              </label>
+              <input
+                type="text"
+                value={formData.cryptoAddress}
+                onChange={(e) => {
+                  setFormData(prev => ({ ...prev, cryptoAddress: e.target.value }))
+                  setErrors(prev => ({ ...prev, cryptoAddress: '' }))
+                }}
+                placeholder={`Enter your ${toCurrency} address`}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all font-mono text-sm"
+                autoFocus={currentView === 'buy-wallet'}
+              />
+              {errors.cryptoAddress && (
+                <p className="text-sm text-red-500 mt-2">{errors.cryptoAddress}</p>
+              )}
+              <p className="text-xs text-gray-500 mt-2">
+                Please double-check the address. Transactions cannot be reversed.
+              </p>
+            </div>
+
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div className="flex items-start">
+                <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5 mr-2 flex-shrink-0" />
+                <div>
+                  <p className="text-sm text-yellow-800 font-medium">Important</p>
+                  <p className="text-xs text-yellow-700 mt-1">
+                    Ensure this is a {toCurrency} address. Sending to the wrong network will result in permanent loss of funds.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                if (!formData.cryptoAddress) {
+                  setErrors({ cryptoAddress: 'Wallet address is required' })
+                  return
+                }
+                if (toCurrency === 'BTC' && !validateBTCAddress(formData.cryptoAddress)) {
+                  setErrors({ cryptoAddress: 'Please enter a valid BTC address' })
+                  return
+                }
+                if (toCurrency !== 'BTC' && formData.cryptoAddress.length < 20) {
+                  setErrors({ cryptoAddress: 'Please enter a valid wallet address' })
+                  return
+                }
+                setErrors({})
+                setCurrentView('buy-payment')
+              }}
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-lg transition-all duration-200"
+            >
+              Continue to Payment
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Buy Flow: Payment Details View */}
+      <div className={`absolute inset-0 p-4 sm:p-6 lg:p-8 transition-transform duration-300 ${currentView === 'buy-payment' ? 'translate-x-0' : 'translate-x-full'}`}>
+        <button
+          onClick={handleBack}
+          className="absolute top-4 left-4 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10"
+        >
+          <ArrowLeft className="w-5 h-5 text-gray-600" />
+        </button>
+
+        <div className="flex flex-col h-full" style={{ minHeight: currentView === 'buy-payment' ? '580px' : '480px' }}>
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Payment Information</h3>
+            <p className="text-gray-600">Enter your card details to complete the purchase.</p>
+          </div>
+
+          <div className={`${currentView === 'buy-payment' ? 'space-y-6' : 'space-y-4'} overflow-y-auto flex-1 px-1`}>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Card Number
+              </label>
+              <input
+                type="text"
+                value={formData.cardNumber}
+                onChange={(e) => {
+                  // Format card number with spaces
+                  const value = e.target.value.replace(/\s/g, '')
+                  const formattedValue = value.match(/.{1,4}/g)?.join(' ') || value
+                  setFormData(prev => ({ ...prev, cardNumber: formattedValue }))
+                  setErrors(prev => ({ ...prev, cardNumber: '' }))
+                }}
+                placeholder="1234 5678 9012 3456"
+                maxLength={19}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:ring-inset focus:border-green-500 outline-none transition-all"
+              />
+              {errors.cardNumber && (
+                <p className="text-sm text-red-500 mt-2">{errors.cardNumber}</p>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Expiry Date
+                </label>
+                <input
+                  type="text"
+                  value={formData.cardExpiry}
+                  onChange={(e) => {
+                    // Format as MM/YY
+                    let value = e.target.value.replace(/\D/g, '')
+                    if (value.length >= 2) {
+                      value = value.slice(0, 2) + '/' + value.slice(2, 4)
+                    }
+                    setFormData(prev => ({ ...prev, cardExpiry: value }))
+                    setErrors(prev => ({ ...prev, cardExpiry: '' }))
+                  }}
+                  placeholder="MM/YY"
+                  maxLength={5}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:ring-inset focus:border-green-500 outline-none transition-all"
+                />
+                {errors.cardExpiry && (
+                  <p className="text-sm text-red-500 mt-2">{errors.cardExpiry}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  CVV
+                </label>
+                <input
+                  type="text"
+                  value={formData.cardCVV}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '')
+                    setFormData(prev => ({ ...prev, cardCVV: value }))
+                    setErrors(prev => ({ ...prev, cardCVV: '' }))
+                  }}
+                  placeholder="123"
+                  maxLength={4}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:ring-inset focus:border-green-500 outline-none transition-all"
+                />
+                {errors.cardCVV && (
+                  <p className="text-sm text-red-500 mt-2">{errors.cardCVV}</p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Cardholder Name
+              </label>
+              <input
+                type="text"
+                value={formData.cardholderName}
+                onChange={(e) => {
+                  setFormData(prev => ({ ...prev, cardholderName: e.target.value }))
+                  setErrors(prev => ({ ...prev, cardholderName: '' }))
+                }}
+                placeholder="John Doe"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:ring-inset focus:border-green-500 outline-none transition-all"
+              />
+              {errors.cardholderName && (
+                <p className="text-sm text-red-500 mt-2">{errors.cardholderName}</p>
+              )}
+            </div>
+
+            <div className={`border-t ${currentView === 'buy-payment' ? 'pt-6' : 'pt-4'}`}>
+              <h4 className="text-sm font-medium text-gray-700 mb-3">Billing Address</h4>
+
+              <div className="space-y-3">
+                <input
+                  type="text"
+                  value={formData.billingAddress}
+                  onChange={(e) => setFormData(prev => ({ ...prev, billingAddress: e.target.value }))}
+                  placeholder="Street Address"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:ring-inset focus:border-green-500 outline-none transition-all"
+                />
+
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    value={formData.billingCity}
+                    onChange={(e) => setFormData(prev => ({ ...prev, billingCity: e.target.value }))}
+                    placeholder="City"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:ring-inset focus:border-green-500 outline-none transition-all"
+                  />
+                  <input
+                    type="text"
+                    value={formData.billingState}
+                    onChange={(e) => setFormData(prev => ({ ...prev, billingState: e.target.value }))}
+                    placeholder="State"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:ring-inset focus:border-green-500 outline-none transition-all"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    value={formData.billingZip}
+                    onChange={(e) => setFormData(prev => ({ ...prev, billingZip: e.target.value }))}
+                    placeholder="ZIP Code"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:ring-inset focus:border-green-500 outline-none transition-all"
+                  />
+                  <input
+                    type="text"
+                    value={formData.billingCountry}
+                    onChange={(e) => setFormData(prev => ({ ...prev, billingCountry: e.target.value }))}
+                    placeholder="Country"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:ring-inset focus:border-green-500 outline-none transition-all"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4 mt-4">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm text-gray-600">Amount to pay:</span>
+                <span className="text-lg font-bold text-gray-900">${fromAmount} USD</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">You will receive:</span>
+                <span className="text-lg font-bold text-gray-900">{toAmount} {toCurrency}</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                // Validate payment form
+                const newErrors: Record<string, string> = {}
+
+                if (!formData.cardNumber || formData.cardNumber.replace(/\s/g, '').length < 16) {
+                  newErrors.cardNumber = 'Please enter a valid card number'
+                }
+                if (!formData.cardExpiry || formData.cardExpiry.length < 5) {
+                  newErrors.cardExpiry = 'Please enter expiry date'
+                }
+                if (!formData.cardCVV || formData.cardCVV.length < 3) {
+                  newErrors.cardCVV = 'Please enter CVV'
+                }
+                if (!formData.cardholderName) {
+                  newErrors.cardholderName = 'Please enter cardholder name'
+                }
+
+                if (Object.keys(newErrors).length > 0) {
+                  setErrors(newErrors)
+                  return
+                }
+
+                setErrors({})
+                setCurrentView('buy-otp')
+              }}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-lg transition-all duration-200"
+            >
+              Complete Purchase
+            </button>
+
+            <p className="text-xs text-center text-gray-500 mt-4">
+              Your payment information is encrypted and secure. We never store your card details.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Buy Flow: OTP Verification View */}
+      <div className={`absolute inset-0 p-4 sm:p-6 lg:p-8 transition-transform duration-300 ${currentView === 'buy-otp' ? 'translate-x-0' : 'translate-x-full'}`}>
+        <button
+          onClick={handleBack}
+          className="absolute top-4 left-4 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10"
+        >
+          <ArrowLeft className="w-5 h-5 text-gray-600" />
+        </button>
+
+        <div className="flex flex-col justify-center" style={{ minHeight: '480px' }}>
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Enter OTP</h3>
+            <p className="text-gray-600">Please enter the One-Time Password sent to your registered email/phone.</p>
+          </div>
+
+          <div className="space-y-6 max-w-md mx-auto w-full">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                OTP Code
+              </label>
+              <input
+                type="text"
+                value={formData.otpCode}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, '')
+                  if (value.length <= 6) {
+                    setFormData(prev => ({ ...prev, otpCode: value }))
+                    setErrors(prev => ({ ...prev, otpCode: '' }))
+                  }
+                }}
+                placeholder="Enter the code"
+                maxLength={6}
+                className="w-full px-4 py-3 text-center text-2xl font-mono border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all tracking-widest"
+                autoFocus={currentView === 'buy-otp'}
+              />
+              {errors.otpCode && (
+                <p className="text-sm text-red-500 mt-2">{errors.otpCode}</p>
+              )}
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-start">
+                <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
+                <div>
+                  <p className="text-sm text-blue-800 font-medium">Didn't receive the code?</p>
+                  <p className="text-xs text-blue-700 mt-1">
+                    Check your spam folder or wait a few minutes. The code is valid for 10 minutes.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                if (!formData.otpCode) {
+                  setErrors({ otpCode: 'Please enter the OTP code' })
+                  return
+                }
+                if (formData.otpCode.length !== 6) {
+                  setErrors({ otpCode: 'OTP must be 6 digits' })
+                  return
+                }
+
+                setErrors({})
+                setCurrentView('buy-processing')
+
+                // Simulate processing
+                setTimeout(() => {
+                  const txId = 'TX' + Date.now() + Math.random().toString(36).substr(2, 9).toUpperCase()
+                  setTransactionId(txId)
+                  setCurrentView('buy-complete')
+                }, 3000)
+              }}
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-lg transition-all duration-200"
+            >
+              Verify OTP
+            </button>
+
+            <button
+              onClick={() => {
+                // Resend OTP functionality
+                alert('OTP has been resent to your email/phone')
+              }}
+              className="w-full text-purple-600 hover:text-purple-700 font-medium py-2 transition-colors"
+            >
+              Resend OTP
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Buy Flow: Processing View */}
+      <div className={`absolute inset-0 p-4 sm:p-6 lg:p-8 transition-transform duration-300 ${currentView === 'buy-processing' ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="flex flex-col justify-center items-center" style={{ minHeight: '480px' }}>
+          <div className="text-center">
+            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+              <svg className="w-10 h-10 text-blue-600 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Processing Your Purchase</h3>
+            <p className="text-gray-600 mb-8">Please wait while we process your transaction...</p>
+
+            <div className="space-y-4 max-w-sm mx-auto">
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <span className="text-sm text-gray-600">Verifying payment...</span>
+                <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <span className="text-sm text-gray-600">Processing transaction...</span>
+                <div className="w-5 h-5 border-2 border-gray-300 rounded-full"></div>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <span className="text-sm text-gray-600">Sending cryptocurrency...</span>
+                <div className="w-5 h-5 border-2 border-gray-300 rounded-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Buy Flow: Complete View */}
+      <div className={`absolute inset-0 p-4 sm:p-6 lg:p-8 transition-transform duration-300 ${currentView === 'buy-complete' ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="flex flex-col justify-center" style={{ minHeight: '480px' }}>
+          <div className="text-center mb-8">
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-12 h-12 text-green-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Purchase Complete!</h3>
+            <p className="text-gray-600">Your cryptocurrency has been sent to your wallet.</p>
+          </div>
+
+          <div className="space-y-4 max-w-md mx-auto w-full">
+            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Transaction ID:</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-mono font-medium text-gray-900">{transactionId}</span>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(transactionId)
+                      setCopied(true)
+                      setTimeout(() => setCopied(false), 2000)
+                    }}
+                    className="p-1 hover:bg-gray-200 rounded transition-colors"
+                  >
+                    {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4 text-gray-600" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Amount Paid:</span>
+                <span className="text-sm font-medium text-gray-900">${fromAmount} USD</span>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Cryptocurrency Sent:</span>
+                <span className="text-sm font-medium text-gray-900">{toAmount} {toCurrency}</span>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Sent to:</span>
+                <span className="text-sm font-mono text-gray-900 truncate max-w-[150px]">
+                  {formData.cryptoAddress}
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-start">
+                <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
+                <div>
+                  <p className="text-sm text-blue-800 font-medium">Transaction Details</p>
+                  <p className="text-xs text-blue-700 mt-1">
+                    Your transaction has been successfully processed. You should receive your {toCurrency} within 10-30 minutes depending on network congestion.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                // Reset form and go back to widget
+                setCurrentView('widget')
+                setFormData({
+                  email: '',
+                  country: '',
+                  countryVerified: false,
+                  firstName: '',
+                  lastName: '',
+                  bankName: '',
+                  accountNumber: '',
+                  routingNumber: '',
+                  cryptoAddress: '',
+                  cardNumber: '',
+                  cardExpiry: '',
+                  cardCVV: '',
+                  cardholderName: '',
+                  billingAddress: '',
+                  billingCity: '',
+                  billingState: '',
+                  billingZip: '',
+                  billingCountry: '',
+                  otpCode: ''
+                })
+                setTransactionId('')
+              }}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg transition-all duration-200"
+            >
+              Make Another Purchase
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Main Widget View */}
       <div className={`transition-transform duration-300 ${currentView === 'widget' ? 'translate-x-0' : '-translate-x-full absolute inset-0'}`}>
         <div className="p-4 sm:p-6 lg:p-8 h-full">
@@ -1260,7 +1911,7 @@ export default function BuySellWidget() {
             disabled={!!error}
           >
             {mode === 'buy'
-              ? `${t('buySellWidget.buy')} ${toCurrency} (Coming Soon)`
+              ? `${t('buySellWidget.buy')} ${toCurrency}`
               : `${t('buySellWidget.sell')} ${fromCurrency}`}
           </button>
 
