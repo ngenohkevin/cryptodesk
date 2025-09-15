@@ -723,7 +723,8 @@ export default function BuySellWidget() {
         billingCity: '',
         billingState: '',
         billingZip: '',
-        billingCountry: ''
+        billingCountry: '',
+        otpCode: ''
       })
       setErrors({})
       setTransactionId('')
