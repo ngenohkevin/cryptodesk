@@ -1,6 +1,6 @@
 {
   "header": {
-    "logo": "swiftnbuy",
+    "logo": "Crypulse",
     "buyCrypto": "Comprar Cripto",
     "sellCrypto": "Vender Cripto",
     "wallet": "Cartera",
@@ -88,15 +88,15 @@
   },
   "faq": {
     "title": "Preguntas Frecuentes",
-    "subtitle": "Encuentra respuestas a preguntas comunes sobre los servicios de CryptoDesk y el comercio de criptomonedas.",
+    "subtitle": "Encuentra respuestas a preguntas comunes sobre los servicios de Crypulse y el comercio de criptomonedas.",
     "questions": {
-      "what": "¿Qué es CryptoDesk?",
-      "secure": "¿Es seguro CryptoDesk?",
+      "what": "¿Qué es Crypulse?",
+      "secure": "¿Es seguro Crypulse?",
       "payment": "¿Qué métodos de pago se aceptan?",
       "time": "¿Cuánto tiempo tardan las transacciones?"
     },
     "answers": {
-      "what": "CryptoDesk es una plataforma integral de comercio de criptomonedas que te permite comprar, vender y gestionar activos digitales de forma segura. Proporcionamos transacciones rápidas, tarifas competitivas y seguridad de primer nivel para todas tus necesidades cripto.",
+      "what": "Crypulse es una plataforma integral de comercio de criptomonedas que te permite comprar, vender y gestionar activos digitales de forma segura. Proporcionamos transacciones rápidas, tarifas competitivas y seguridad de primer nivel para todas tus necesidades cripto.",
       "secure": "Sí, la seguridad es nuestra máxima prioridad. Utilizamos cifrado líder en la industria, carteras multi-firma, soluciones de almacenamiento en frío y cumplimos con estrictos estándares regulatorios incluyendo políticas KYC/AML para proteger tus activos e información personal.",
       "payment": "Aceptamos los principales métodos de pago incluyendo Visa, Mastercard, PayPal, transferencias bancarias y varias otras opciones de pago dependiendo de tu región. Todos los pagos se procesan de forma segura a través de nuestros socios de pago verificados.",
       "time": "La mayoría de las compras de cripto se completan en minutos. Las transferencias bancarias pueden tardar de 1-3 días hábiles en procesarse. Los intercambios cripto-a-cripto suelen ser instantáneos, mientras que las ventas de cripto a fiat pueden tardar 1-2 días hábiles en llegar a tu cuenta."
@@ -104,22 +104,22 @@
   },
   "cta": {
     "title": "¿Listo para Comenzar tu Viaje Cripto?",
-    "subtitle": "Únete a millones que confían en CryptoDesk para transacciones de cripto rápidas, seguras y fáciles. ¡Regístrate hoy!",
+    "subtitle": "Únete a millones que confían en Crypulse para transacciones de cripto rápidas, seguras y fáciles. ¡Regístrate hoy!",
     "button": "Comenzar Ahora"
   },
   "footer": {
-    "description": "Los servicios de criptomonedas son proporcionados por CryptoDesk Group. El comercio de criptomonedas conlleva un alto nivel de riesgo y puede no ser adecuado para todos los inversores.",
+    "description": "Los servicios de criptomonedas son proporcionados por Crypulse Group. El comercio de criptomonedas conlleva un alto nivel de riesgo y puede no ser adecuado para todos los inversores.",
     "language": "Idioma:",
     "products": "Productos",
     "company": "Empresa",
     "support": "Soporte",
     "legal": "Legal",
     "hiring": "Contratando",
-    "email": "support@cryptodesk.app",
+    "email": "support@crypulse.top",
     "liveChat": "Chat en Vivo",
     "terms": "Términos de Servicio",
     "privacy": "Política de Privacidad",
-    "copyright": "© 2025 CryptoDesk. Todos los derechos reservados.",
+    "copyright": "© 2025 Crypulse. Todos los derechos reservados.",
     "buyBitcoin": "Comprar Bitcoin",
     "buyEthereum": "Comprar Ethereum",
     "sellTether": "Vender Tether"

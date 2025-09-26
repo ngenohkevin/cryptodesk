@@ -15,14 +15,28 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'CryptoDesk | Buy & Sell Crypto Instantly',
-  description: 'Securely buy, sell, and manage your crypto assets. CryptoDesk offers fast transactions, top-tier security, and 24/7 support for Bitcoin, Ethereum, Tether, and more.',
-  keywords: 'cryptocurrency,crypto,buy bitcoin,sell bitcoin,ethereum,tether,litecoin,cryptodesk,digital assets,blockchain,crypto exchange',
+  title: 'Crypulse | Buy & Sell Crypto Instantly',
+  description: 'Securely buy, sell, and manage your crypto assets. Crypulse offers fast transactions, top-tier security, and 24/7 support for Bitcoin, Ethereum, Tether, and more.',
+  keywords: 'cryptocurrency,crypto,buy bitcoin,sell bitcoin,ethereum,tether,litecoin,crypulse,digital assets,blockchain,crypto exchange',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '16x16 32x32 48x48' },
+      { url: '/favicon.svg', type: 'image/svg+xml' }
+    ],
+    apple: { url: '/icons/apple-touch-icon.png', sizes: '180x180' },
+    other: [
+      { url: '/icons/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' }
+    ]
+  },
   openGraph: {
-    title: 'CryptoDesk | Buy & Sell Crypto Instantly',
-    description: 'Securely buy, sell, and manage your crypto assets. CryptoDesk offers fast transactions, top-tier security, and 24/7 support for Bitcoin, Ethereum, Tether, and more.',
+    title: 'Crypulse | Buy & Sell Crypto Instantly',
+    description: 'Securely buy, sell, and manage your crypto assets. Crypulse offers fast transactions, top-tier security, and 24/7 support for Bitcoin, Ethereum, Tether, and more.',
     type: 'website',
-    siteName: 'CryptoDesk'
+    siteName: 'Crypulse',
+    images: [
+      { url: '/icons/logo.svg', width: 64, height: 64, alt: 'Crypulse Logo' }
+    ]
   }
 }
 

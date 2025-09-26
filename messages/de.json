@@ -1,6 +1,6 @@
 {
   "header": {
-    "logo": "swiftnbuy",
+    "logo": "Crypulse",
     "buyCrypto": "Krypto Kaufen",
     "sellCrypto": "Krypto Verkaufen",
     "wallet": "Wallet",
@@ -88,15 +88,15 @@
   },
   "faq": {
     "title": "Häufig gestellte Fragen",
-    "subtitle": "Finden Sie Antworten auf häufige Fragen zu CryptoDesk-Services und Kryptowährungshandel.",
+    "subtitle": "Finden Sie Antworten auf häufige Fragen zu Crypulse-Services und Kryptowährungshandel.",
     "questions": {
-      "what": "Was ist CryptoDesk?",
-      "secure": "Ist CryptoDesk sicher?",
+      "what": "Was ist Crypulse?",
+      "secure": "Ist Crypulse sicher?",
       "payment": "Welche Zahlungsmethoden werden akzeptiert?",
       "time": "Wie lange dauern Transaktionen?"
     },
     "answers": {
-      "what": "CryptoDesk ist eine umfassende Kryptowährungs-Handelsplattform, die es Ihnen ermöglicht, digitale Assets sicher zu kaufen, verkaufen und verwalten. Wir bieten schnelle Transaktionen, wettbewerbsfähige Preise und erstklassige Sicherheit für alle Ihre Krypto-Bedürfnisse.",
+      "what": "Crypulse ist eine umfassende Kryptowährungs-Handelsplattform, die es Ihnen ermöglicht, digitale Assets sicher zu kaufen, verkaufen und verwalten. Wir bieten schnelle Transaktionen, wettbewerbsfähige Preise und erstklassige Sicherheit für alle Ihre Krypto-Bedürfnisse.",
       "secure": "Ja, Sicherheit hat für uns oberste Priorität. Wir verwenden branchenführende Verschlüsselung, Multi-Signatur-Wallets, Cold-Storage-Lösungen und halten strenge regulatorische Standards einschließlich KYC/AML-Richtlinien ein, um Ihre Assets und persönlichen Daten zu schützen.",
       "payment": "Wir akzeptieren alle wichtigen Zahlungsmethoden einschließlich Visa, Mastercard, PayPal, Banküberweisungen und verschiedene andere Zahlungsoptionen je nach Region. Alle Zahlungen werden sicher über unsere verifizierten Zahlungspartner abgewickelt.",
       "time": "Die meisten Krypto-Käufe werden innerhalb von Minuten abgeschlossen. Banküberweisungen können 1-3 Werktage zur Bearbeitung benötigen. Krypto-zu-Krypto-Tausche sind in der Regel sofort, während Krypto-Verkäufe zu Fiat 1-2 Werktage benötigen können, bis sie Ihr Konto erreichen."
@@ -104,22 +104,22 @@
   },
   "cta": {
     "title": "Bereit, Ihre Krypto-Reise zu beginnen?",
-    "subtitle": "Schließen Sie sich Millionen an, die CryptoDesk für schnelle, sichere und einfache Krypto-Transaktionen vertrauen. Registrieren Sie sich noch heute!",
+    "subtitle": "Schließen Sie sich Millionen an, die Crypulse für schnelle, sichere und einfache Krypto-Transaktionen vertrauen. Registrieren Sie sich noch heute!",
     "button": "Jetzt Loslegen"
   },
   "footer": {
-    "description": "Kryptowährungsdienstleistungen werden von der CryptoDesk Group bereitgestellt. Der Handel mit Kryptowährungen birgt ein hohes Risiko und ist möglicherweise nicht für alle Anleger geeignet.",
+    "description": "Kryptowährungsdienstleistungen werden von der Crypulse Group bereitgestellt. Der Handel mit Kryptowährungen birgt ein hohes Risiko und ist möglicherweise nicht für alle Anleger geeignet.",
     "language": "Sprache:",
     "products": "Produkte",
     "company": "Unternehmen",
     "support": "Support",
     "legal": "Rechtliches",
     "hiring": "Stellenangebote",
-    "email": "support@cryptodesk.app",
+    "email": "support@crypulse.top",
     "liveChat": "Live-Chat",
     "terms": "Nutzungsbedingungen",
     "privacy": "Datenschutzrichtlinie",
-    "copyright": "© 2025 CryptoDesk. Alle Rechte vorbehalten.",
+    "copyright": "© 2025 Crypulse. Alle Rechte vorbehalten.",
     "buyBitcoin": "Bitcoin Kaufen",
     "buyEthereum": "Ethereum Kaufen",
     "sellTether": "Tether Verkaufen"

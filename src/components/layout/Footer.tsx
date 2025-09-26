@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { ChevronDown, Mail, MessageCircle } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import Logo from '@/components/common/Logo'
 
 export default function Footer() {
   const { t } = useLanguage()
@@ -12,12 +13,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">C</span>
-              </div>
-              <span className="text-xl font-semibold">CryptoDesk</span>
-            </Link>
+            <Logo size="sm" variant="white" />
             <p className="text-gray-300 text-sm">
               {t('footer.description')}
             </p>
@@ -81,7 +77,7 @@ export default function Footer() {
             <h3 className="font-semibold text-lg">{t('footer.support')}</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="mailto:support@cryptodesk.app" className="text-gray-300 hover:text-white transition-colors flex items-center space-x-2">
+                <Link href="mailto:support@crypulse.top" className="text-gray-300 hover:text-white transition-colors flex items-center space-x-2">
                   <Mail className="w-4 h-4" />
                   <span>{t('footer.email')}</span>
                 </Link>

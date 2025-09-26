@@ -1,6 +1,6 @@
-# CryptoDesk - Cryptocurrency Trading Platform
+# Crypulse - Cryptocurrency Trading Platform
 
-A modern, responsive cryptocurrency trading platform built with Next.js 15, TypeScript, and Tailwind CSS. This project is a clone inspired by the original cryptbuy.top website, featuring all the core functionality and design elements.
+A modern, responsive cryptocurrency trading platform built with Next.js 15, TypeScript, and Tailwind CSS. Available at crypulse.top, featuring comprehensive cryptocurrency trading functionality and real-time market data.
 
 ## ✨ Features
 
@@ -39,7 +39,7 @@ A modern, responsive cryptocurrency trading platform built with Next.js 15, Type
 
 1. **Clone or navigate to the project directory**
    ```bash
-   cd cryptodesk
+   cd crypulse
    ```
 
 2. **Install dependencies**
@@ -60,7 +60,7 @@ A modern, responsive cryptocurrency trading platform built with Next.js 15, Type
 ## 📁 Project Structure
 
 ```
-cryptodesk/
+crypulse/
 ├── src/
 │   ├── app/                    # Next.js App Router
 │   │   ├── globals.css         # Global styles
@@ -148,5 +148,5 @@ This project is for educational and demonstration purposes.
 
 ---
 
-**Built with ❤️ using Next.js 15 and Tailwind CSS**# cryptodesk
+**Built with ❤️ using Next.js 15 and Tailwind CSS**# crypulse
 # Auto-deployment test - 2025-09-09 22:38:05

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Shield, Lock, Database, Eye } from 'lucide-react'
 
 const securityFeatures = [
@@ -51,7 +51,19 @@ const securityPartners = [
 
 export default function SecuritySection() {
   const [hoveredPartner, setHoveredPartner] = useState<number | null>(null)
-  
+
+  // Close tooltip when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setHoveredPartner(null)
+    }
+
+    if (hoveredPartner !== null) {
+      document.addEventListener('click', handleClickOutside)
+      return () => document.removeEventListener('click', handleClickOutside)
+    }
+  }, [hoveredPartner])
+
   return (
     <section className="py-16 lg:py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,27 +111,37 @@ export default function SecuritySection() {
             Compliance & Security Partners
           </h3>
           
-          <div className="flex justify-center items-center gap-8 flex-wrap relative">
+          <div className="flex justify-center items-center gap-4 sm:gap-8 flex-wrap relative px-4">
             {securityPartners.map((partner, index) => (
               <div
                 key={index}
-                className="relative"
+                className="relative group"
                 onMouseEnter={() => setHoveredPartner(index)}
                 onMouseLeave={() => setHoveredPartner(null)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setHoveredPartner(hoveredPartner === index ? null : index)
+                }}
               >
                 <div className="w-16 h-16 bg-white rounded-xl shadow-sm border border-gray-200 p-2 hover:shadow-md transition-shadow duration-300 cursor-pointer">
-                  <img 
-                    src={partner.image} 
+                  <img
+                    src={partner.image}
                     alt={partner.alt}
                     className="w-full h-full object-contain"
                   />
                 </div>
-                
-                {/* Tooltip */}
+
+                {/* Mobile-optimized Tooltip */}
                 {hoveredPartner === index && (
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap z-10 shadow-lg animate-in fade-in-0 zoom-in-95 duration-300">
-                    {partner.tooltip}
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
+                  <div className={`absolute bottom-full mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg z-50 shadow-xl animate-in fade-in-0 zoom-in-95 duration-200 w-48 sm:w-auto sm:max-w-xs text-center ${
+                    index <= 1 ? 'left-0' : index >= securityPartners.length - 2 ? 'right-0' : 'left-1/2 transform -translate-x-1/2'
+                  }`}>
+                    <div className="whitespace-normal leading-tight">
+                      {partner.tooltip}
+                    </div>
+                    <div className={`absolute top-full w-2 h-2 bg-gray-900 rotate-45 ${
+                      index <= 1 ? 'left-4' : index >= securityPartners.length - 2 ? 'right-4' : 'left-1/2 transform -translate-x-1/2'
+                    }`}></div>
                   </div>
                 )}
               </div>

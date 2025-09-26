@@ -42,7 +42,7 @@ async function fetchWithTimeout(url: string, timeout = 8000): Promise<Response> 
       signal: controller.signal,
       headers: {
         'Accept': 'application/json',
-        'User-Agent': 'CryptoDesk/1.0'
+        'User-Agent': 'Crypulse/1.0'
       },
       next: { revalidate: 30 } // Next.js cache for 30 seconds
     })

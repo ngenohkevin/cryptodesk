@@ -1,6 +1,6 @@
 {
   "header": {
-    "logo": "swiftnbuy",
+    "logo": "Crypulse",
     "buyCrypto": "Buy Crypto",
     "sellCrypto": "Sell Crypto",
     "wallet": "Wallet",
@@ -26,7 +26,7 @@
     }
   },
   "features": {
-    "title": "Why Choose swiftnbuy?",
+    "title": "Why Choose Crypulse?",
     "subtitle": "Experience the difference with our user-focused platform and comprehensive features.",
     "fast": {
       "title": "Lightning-Fast Transactions",
@@ -79,24 +79,24 @@
   },
   "testimonials": {
     "title": "Trusted by Millions Worldwide",
-    "subtitle": "See what our users are saying about their swiftnbuy experience.",
+    "subtitle": "See what our users are saying about their Crypulse experience.",
     "rating": "Excellent",
     "reviews": "Based on 15,000+ reviews",
-    "sarah": "swiftnbuy made buying crypto so simple! The interface is user-friendly and transactions are fast.",
+    "sarah": "Crypulse made buying crypto so simple! The interface is user-friendly and transactions are fast.",
     "mike": "Excellent customer support. They helped me through my first purchase and were very patient.",
-    "chen": "Secure platform and transparent fees. I feel safe using swiftnbuy for my crypto investments."
+    "chen": "Secure platform and transparent fees. I feel safe using Crypulse for my crypto investments."
   },
   "faq": {
     "title": "Frequently Asked Questions",
-    "subtitle": "Find answers to common questions about CryptoDesk services and cryptocurrency trading.",
+    "subtitle": "Find answers to common questions about Crypulse services and cryptocurrency trading.",
     "questions": {
-      "what": "What is CryptoDesk?",
-      "secure": "Is CryptoDesk secure?",
+      "what": "What is Crypulse?",
+      "secure": "Is Crypulse secure?",
       "payment": "What payment methods are accepted?",
       "time": "How long do transactions take?"
     },
     "answers": {
-      "what": "CryptoDesk is a comprehensive cryptocurrency trading platform that allows you to buy, sell, and manage digital assets securely. We provide fast transactions, competitive rates, and top-tier security for all your crypto needs.",
+      "what": "Crypulse is a comprehensive cryptocurrency trading platform that allows you to buy, sell, and manage digital assets securely. We provide fast transactions, competitive rates, and top-tier security for all your crypto needs.",
       "secure": "Yes, security is our top priority. We use industry-leading encryption, multi-signature wallets, cold storage solutions, and comply with strict regulatory standards including KYC/AML policies to protect your assets and personal information.",
       "payment": "We accept major payment methods including Visa, Mastercard, PayPal, bank transfers, and various other payment options depending on your region. All payments are processed securely through our verified payment partners.",
       "time": "Most crypto purchases are completed within minutes. Bank transfers may take 1-3 business days to process. Crypto-to-crypto swaps are typically instant, while crypto sales to fiat may take 1-2 business days to reach your account."
@@ -104,22 +104,22 @@
   },
   "cta": {
     "title": "Ready to Start Your Crypto Journey?",
-    "subtitle": "Join millions who trust CryptoDesk for fast, secure, and easy crypto transactions. Sign up today!",
+    "subtitle": "Join millions who trust Crypulse for fast, secure, and easy crypto transactions. Sign up today!",
     "button": "Get Started Now"
   },
   "footer": {
-    "description": "Cryptocurrency services are provided by CryptoDesk Group. Trading cryptocurrencies carries a high level of risk and may not be suitable for all investors.",
+    "description": "Cryptocurrency services are provided by Crypulse. Trading cryptocurrencies carries a high level of risk and may not be suitable for all investors.",
     "language": "Language:",
     "products": "Products",
     "company": "Company",
     "support": "Support",
     "legal": "Legal",
     "hiring": "Hiring",
-    "email": "support@cryptodesk.app",
+    "email": "support@crypulse.top",
     "liveChat": "Live Chat",
     "terms": "Terms of Service",
     "privacy": "Privacy Policy",
-    "copyright": "© 2025 CryptoDesk. All rights reserved.",
+    "copyright": "© 2025 Crypulse. All rights reserved.",
     "buyBitcoin": "Buy Bitcoin",
     "buyEthereum": "Buy Ethereum",
     "sellTether": "Sell Tether"
