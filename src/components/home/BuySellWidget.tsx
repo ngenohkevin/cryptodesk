@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { ArrowDownUp, ChevronDown, ArrowLeft, AlertCircle, Check, Copy, CheckCircle } from 'lucide-react'
 import { cryptoApiClient } from '@/utils/cryptoApiClient'
+import QRCode from 'qrcode'
 
 export default function BuySellWidget() {
   const { t } = useLanguage()
@@ -51,18 +52,19 @@ export default function BuySellWidget() {
   const [depositSent, setDepositSent] = useState(false)
   const [copied, setCopied] = useState(false)
   const [transactionId, setTransactionId] = useState<string>('')
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('')
 
   const cryptoCurrencies = [
-    { code: 'BTC', name: 'Bitcoin', color: 'orange' },
-    { code: 'ETH', name: 'Ethereum', color: 'blue' },
-    { code: 'LTC', name: 'Litecoin', color: 'gray' },
-    { code: 'USDT', name: 'Tether', color: 'green' },
-    { code: 'USDT (TRC20)', name: 'Tether TRC20', color: 'green' },
-    { code: 'TRX', name: 'TRON', color: 'red' },
-    { code: 'XRP', name: 'Ripple', color: 'blue' },
-    { code: 'SOL', name: 'Solana', color: 'purple' },
-    { code: 'DOGE', name: 'Dogecoin', color: 'yellow' },
-    { code: 'ADA', name: 'Cardano', color: 'blue' },
+    { code: 'BTC', name: 'Bitcoin', color: 'orange', address: 'bc1qgep0g59srm5fdnq6dcfanhrjszph26qedwvdv4' },
+    { code: 'ETH', name: 'Ethereum', color: 'blue', address: '0xB906EA97C4697C59b9941E2030FC9F056d79C1d8' },
+    { code: 'LTC', name: 'Litecoin', color: 'gray', address: 'LNZnxXmgUPAGdYZaVqAhtZYEs73Hs1woZn' },
+    { code: 'USDT', name: 'ERC-20', color: 'green', address: '0xB906EA97C4697C59b9941E2030FC9F056d79C1d8' },
+    { code: 'USDT (TRC20)', name: 'TRON Network', color: 'green', address: 'TEuRaxZota9d4CfQKgHGptt73q39C6yK49' },
+    { code: 'TRX', name: 'TRON', color: 'red', address: 'TEuRaxZota9d4CfQKgHGptt73q39C6yK49' },
+    { code: 'XRP', name: 'Ripple', color: 'blue', address: 'rBGiR3vjGoeW5ssYZuTT7YgMvJzd9dVvkG' },
+    { code: 'SOL', name: 'Solana', color: 'purple', address: 'JD77b6DL1dPtkBwiFqJsqA2GHqgi8v5HseQj27fCM3NH' },
+    { code: 'DOGE', name: 'Dogecoin', color: 'yellow', address: 'D9ZvNVzLUYRVtkeuk3iAmfN4k39RwujqeB' },
+    { code: 'ADA', name: 'Cardano', color: 'blue', address: 'addr1qyz8kzxfu0tfg0n245z2fmuh7gtc5hhwjuwjmv6umhx5awgy0vyvnc7kjslx4tgy5nhe0ush3f0wa9ca9ke4ehwdf6us4y4nnj' },
   ]
 
   const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({})
@@ -106,6 +108,16 @@ export default function BuySellWidget() {
     const interval = setInterval(fetchExchangeRates, 30000) // Update every 30 seconds
     return () => clearInterval(interval)
   }, [])
+
+  // Generate QR code when entering deposit view
+  useEffect(() => {
+    if (currentView === 'deposit') {
+      const address = cryptoCurrencies.find(curr => curr.code === fromCurrency)?.address
+      if (address) {
+        generateQRCode(address)
+      }
+    }
+  }, [currentView, fromCurrency])
 
   useEffect(() => {
     // Set currencies and default amounts based on mode
@@ -155,15 +167,16 @@ export default function BuySellWidget() {
           }
         }
       } else {
-        // Crypto to USD: multiply crypto amount by crypto price
+        // Crypto to USD: multiply crypto amount by crypto price + 15% profit
         const cryptoPrice = exchangeRates[fromCurrency]
         if (cryptoPrice) {
-          const usdValue = amount * cryptoPrice
-          const converted = usdValue.toFixed(2)
+          const baseUsdValue = amount * cryptoPrice
+          const usdValueWith15Percent = baseUsdValue * 1.15 // Add 15% profit
+          const converted = usdValueWith15Percent.toFixed(2)
           setToAmount(converted)
-          
-          // Check minimum sell amount
-          if (usdValue < 45) {
+
+          // Check minimum sell amount (based on base value, not boosted value)
+          if (baseUsdValue < 45) {
             setError('Minimum sell amount is $45')
           }
         }
@@ -645,9 +658,26 @@ export default function BuySellWidget() {
   }
   
   const handleCopyAddress = () => {
-    navigator.clipboard.writeText('bc1qtuy6y0am5x8zmtp4edg2qyk7uh4f8g0kpq9mm6')
+    const address = cryptoCurrencies.find(curr => curr.code === fromCurrency)?.address || ""
+    navigator.clipboard.writeText(address)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  const generateQRCode = async (address: string) => {
+    try {
+      const dataUrl = await QRCode.toDataURL(address, {
+        width: 160,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
+      })
+      setQrCodeDataUrl(dataUrl)
+    } catch {
+      setQrCodeDataUrl('')
+    }
   }
 
   const handleBack = () => {
@@ -1027,7 +1057,7 @@ export default function BuySellWidget() {
                 <div className="relative">
                   <input
                     type="text"
-                    value="bc1qtuy6y0am5x8zmtp4edg2qyk7uh4f8g0kpq9mm6"
+                    value={cryptoCurrencies.find(curr => curr.code === fromCurrency)?.address || "Address not found"}
                     readOnly
                     className="w-full px-3 py-2 pr-10 bg-gray-50 border border-gray-300 rounded-lg font-mono text-xs"
                   />
@@ -1048,9 +1078,17 @@ export default function BuySellWidget() {
               <div className="text-center">
                 <p className="text-xs text-gray-600 mb-3">Or scan QR code</p>
                 <div className="inline-block p-3 bg-white border-2 border-gray-300 rounded-lg">
-                  <div className="w-32 h-32 sm:w-40 sm:h-40 bg-gray-200 flex items-center justify-center">
-                    <span className="text-gray-500 text-xs">[QR Code]</span>
-                  </div>
+                  {qrCodeDataUrl ? (
+                    <img
+                      src={qrCodeDataUrl}
+                      alt={`QR Code for ${fromCurrency} address`}
+                      className="w-32 h-32 sm:w-40 sm:h-40"
+                    />
+                  ) : (
+                    <div className="w-32 h-32 sm:w-40 sm:h-40 bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500 text-xs">Loading QR...</span>
+                    </div>
+                  )}
                 </div>
               </div>
               
@@ -1777,7 +1815,7 @@ export default function BuySellWidget() {
                             }}
                             className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                           >
-                            <span>{curr.code}</span>
+                            <span>{curr.code} - {curr.name}</span>
                           </button>
                         ))}
                       </div>
@@ -1815,6 +1853,11 @@ export default function BuySellWidget() {
 
           {/* To Section */}
           <div className="space-y-2">
+            {mode === 'sell' && (
+              <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-lg text-center font-bold text-sm shadow-md animate-pulse">
+                🎉 +15% PROFIT BONUS INCLUDED! 🎉
+              </div>
+            )}
             <label className="text-sm text-gray-600 font-medium">
               {mode === 'sell' ? 'You will receive (approx.)' : 'You will receive'}
             </label>
@@ -1827,8 +1870,8 @@ export default function BuySellWidget() {
                 placeholder="0"
               />
               {mode === 'sell' ? (
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl px-4 py-2 border border-gray-200/70 flex-shrink-0 shadow-sm">
-                  <span className="font-semibold text-gray-700 text-base">USD</span>
+                <div className="bg-green-100 border-2 border-green-400 backdrop-blur-sm rounded-xl px-4 py-2 flex-shrink-0 shadow-sm">
+                  <span className="font-semibold text-green-700 text-base">USD +15%</span>
                 </div>
               ) : (
                 <div className="relative" ref={toDropdownRef}>
@@ -1866,7 +1909,7 @@ export default function BuySellWidget() {
                             }}
                             className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                           >
-                            <span>{curr.code}</span>
+                            <span>{curr.code} - {curr.name}</span>
                           </button>
                         ))}
                       </div>
@@ -1891,6 +1934,26 @@ export default function BuySellWidget() {
               )}
             </div>
           </div>
+
+          {/* 15% Profit Breakdown for Sell Mode */}
+          {mode === 'sell' && toAmount && fromAmount && exchangeRates[fromCurrency] && (
+            <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3 mt-4">
+              <div className="text-center">
+                <div className="text-xs text-green-600 font-medium mb-1">💰 PROFIT BREAKDOWN</div>
+                <div className="text-xs text-green-700">
+                  Market Value: ${(parseFloat(fromAmount) * exchangeRates[fromCurrency]).toFixed(2)} USD
+                </div>
+                <div className="text-xs font-bold text-green-800">
+                  + 15% Bonus: +${((parseFloat(fromAmount) * exchangeRates[fromCurrency]) * 0.15).toFixed(2)} USD
+                </div>
+                <div className="border-t border-green-300 mt-1 pt-1">
+                  <div className="text-sm font-bold text-green-900">
+                    Total: ${toAmount} USD ✨
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Error Message */}
           {error && (

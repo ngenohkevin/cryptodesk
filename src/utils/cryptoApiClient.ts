@@ -7,6 +7,7 @@ const COIN_IDS_MAP = {
   'ETH': 'ethereum',
   'LTC': 'litecoin',
   'USDT': 'tether',
+  'USDT (ERC-20)': 'tether',
   'USDT (TRC20)': 'tether',
   'TRX': 'tron',
   'XRP': 'ripple',
