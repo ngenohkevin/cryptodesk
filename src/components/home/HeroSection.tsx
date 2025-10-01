@@ -7,7 +7,7 @@ import BuySellWidget from './BuySellWidget'
 export default function HeroSection() {
   const { t } = useLanguage()
   return (
-    <section className="relative" style={{ backgroundColor: '#F0F6FE' }}>
+    <section className="relative" style={{ backgroundColor: '#F0F6FE' }} aria-label="Hero section for selling cryptocurrency with 15% profit bonus">
       {/* Abstract background */}
       <div className="absolute inset-0">
         {/* Subtle decorative elements */}

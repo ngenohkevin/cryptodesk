@@ -158,8 +158,8 @@ export default function TermsOfServicePage() {
                 </h2>
                 <p className="text-gray-600 leading-relaxed">
                   Support email: {' '}
-                  <a href="mailto:support@swiftnbuy.app" className="text-blue-600 hover:text-blue-700">
-                    support@swiftnbuy.app
+                  <a href="mailto:support@crypulse.top" className="text-blue-600 hover:text-blue-700">
+                    support@crypulse.top
                   </a>
                 </p>
               </div>

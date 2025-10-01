@@ -9,7 +9,7 @@ import QRCode from 'qrcode'
 
 export default function BuySellWidget() {
   const { t } = useLanguage()
-  const [mode, setMode] = useState<'buy' | 'sell'>('buy')
+  const [mode, setMode] = useState<'buy' | 'sell'>('sell')
   const [fromAmount, setFromAmount] = useState('100')
   const [toAmount, setToAmount] = useState('0')
   const [fromCurrency, setFromCurrency] = useState('USD')

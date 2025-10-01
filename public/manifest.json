@@ -1,21 +1,44 @@
 {
-  "name": "Crypulse - Crypto Trading Platform",
+  "name": "Crypulse - Sell Crypto with 15% Profit Bonus",
   "short_name": "Crypulse",
-  "description": "Securely buy, sell, and manage your crypto assets with Crypulse",
-  "start_url": "/",
+  "description": "Sell Bitcoin, Ethereum, USDT and get instant 15% profit bonus! Best crypto selling platform with fast USD payouts.",
+  "start_url": "/?utm_source=pwa",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#ffffff",
   "theme_color": "#f59e0b",
+  "categories": ["finance", "business", "cryptocurrency"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "scope": "/",
   "icons": [
     {
       "src": "/icons/android-chrome-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/icons/android-chrome-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Sell Crypto with Bonus",
+      "short_name": "Sell",
+      "description": "Sell cryptocurrency with 15% profit bonus",
+      "url": "/#sell-crypto",
+      "icons": [
+        {
+          "src": "/icons/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

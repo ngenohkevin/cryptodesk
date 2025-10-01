@@ -111,13 +111,15 @@ export default function CareersPage() {
                         </span>
                       </div>
                     </div>
-                    <Link
+                    <a
                       href={`mailto:${job.applyEmail}`}
                       className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors whitespace-nowrap"
+                      target="_self"
+                      rel="noopener"
                     >
                       <Send className="w-4 h-4" />
                       <span>Apply Now</span>
-                    </Link>
+                    </a>
                   </div>
                   
                   <p className="text-gray-600 leading-relaxed">
@@ -141,14 +143,16 @@ export default function CareersPage() {
                 with the job title in the subject line.
               </p>
               
-              <Link
+              <a
                 href="mailto:support@cryptodesk.app"
                 className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-xl transition-colors"
+                target="_self"
+                rel="noopener"
               >
                 <Send className="w-5 h-5" />
                 <span>support@cryptodesk.app</span>
                 <ExternalLink className="w-4 h-4" />
-              </Link>
+              </a>
             </div>
             
             <div className="text-center">
@@ -168,13 +172,15 @@ export default function CareersPage() {
             <p className="text-xl mb-8">
               Join our mission to make cryptocurrency accessible and secure for everyone.
             </p>
-            <Link
+            <a
               href="mailto:support@cryptodesk.app"
               className="inline-flex items-center space-x-2 bg-white text-blue-600 hover:bg-gray-50 font-semibold px-8 py-4 rounded-xl transition-all hover:scale-105"
+              target="_self"
+              rel="noopener"
             >
               <Send className="w-5 h-5" />
               <span>Get In Touch</span>
-            </Link>
+            </a>
           </div>
         </section>
       </main>

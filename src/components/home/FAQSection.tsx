@@ -32,8 +32,26 @@ export default function FAQSection() {
     setOpenIndex(openIndex === index ? null : index)
   }
 
+  // FAQ Schema for SEO rich snippets
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer
+      }
+    }))
+  }
+
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-white" itemScope itemType="https://schema.org/FAQPage">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl mb-6">
@@ -52,12 +70,15 @@ export default function FAQSection() {
             <div
               key={index}
               className="border border-gray-200 rounded-2xl overflow-hidden"
+              itemScope
+              itemProp="mainEntity"
+              itemType="https://schema.org/Question"
             >
               <button
                 onClick={() => toggleFAQ(index)}
                 className="w-full px-6 py-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
               >
-                <h3 className="text-lg font-semibold text-gray-900 pr-4">
+                <h3 className="text-lg font-semibold text-gray-900 pr-4" itemProp="name">
                   {faq.question}
                 </h3>
                 <ChevronDown
@@ -68,9 +89,9 @@ export default function FAQSection() {
               </button>
               
               {openIndex === index && (
-                <div className="px-6 pb-6">
+                <div className="px-6 pb-6" itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
                   <div className="h-px bg-gray-200 mb-4" />
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-gray-600 leading-relaxed" itemProp="text">
                     {faq.answer}
                   </p>
                 </div>
