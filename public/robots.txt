@@ -1,0 +1,31 @@
+# Robots.txt for cryptbuy.top
+# Optimized for maximum crawling and indexing
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /private/
+
+# Prioritize sell crypto pages
+Allow: /sell
+Allow: /sell-crypto
+Allow: /sell-bitcoin
+Allow: /sell-ethereum
+
+# Sitemap location
+Sitemap: https://cryptbuy.top/sitemap.xml
+
+# Crawl delay (be nice to search engines)
+Crawl-delay: 0
+
+# Google-specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing-specific
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0
